@@ -13,4 +13,42 @@
    Why: no model is involved here, so any miss is a bug and not a judgment call.
 
 5. Bad input. Missing, empty, or over 5,000 character text returns a 400 with a clear error message in 5 of 5 tests, and nothing is written to the log for it.
-   Why: GPT-2 only reads about 1,000 tokens, and bad input should not crash the service or leave junk in the log.
+   Why: the detector only reads the first 400 tokens (about 1,600 characters), so a 5,000 character cap is generous. The cap stops huge payloads from slowing or crashing the service, and bad input should never leave junk in the log.
+
+## Rules from the starter template
+
+- **Unit 8 tests across three trials, and the target has to hold across all
+  three.** Your first signal runs a model, so identical input can score
+  differently twice. A target of "at most 1 in 10" against trials of 2, 1, 2 is
+  a **miss**.
+
+```
+     UNIT 8 — read this before you change anything above.
+
+     If a criterion turns out to be BROKEN rather than merely unmet, you can
+     revise it, and that earns credit. But never delete or edit the original
+     line. Add the revision underneath, like this:
+
+         ## 2. Uncertain cases land in the unsure band
+
+         The system handles uncertain cases well.
+
+         **Why this target:** ...
+
+         > **Revised in unit 8:** Text I judged borderline scores between
+         > 0.4 and 0.6 in at least 4 of 5 cases.
+         >
+         > **Why revised:** "well" gave me nothing to check. I couldn't
+         > reach a verdict from it at all.
+
+     That's a revision because the criterion couldn't be MEASURED.
+
+     Lowering a target because you missed it is not a revision, and it costs
+     you the point:
+
+         ✗ "At most 1 of 10 of my own pieces flagged as AI" → "at most 3
+            of 10", because 1 of 10 turned out to be hard.
+
+     A number you missed stays where it is, gets diagnosed, and gets a fix
+     attempted. That's where the points are.
+```
