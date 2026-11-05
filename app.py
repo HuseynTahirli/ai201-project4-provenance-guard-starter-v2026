@@ -30,8 +30,11 @@ from flask import Flask, jsonify, request
 
 import audit
 import config
+import detector
 
 app = Flask(__name__)
+
+MAX_TEXT_CHARS = 5000
 
 
 # ── Rate limiting — UNIT 8 ────────────────────────────────────────────────────
@@ -199,15 +202,44 @@ def submit():
     what should this do when `text` is missing, empty, or enormous? A crash on
     a malformed input is one of the most common real failures there is.
     """
-    payload = request.get_json(silent=True) or {}
-    text = payload.get("text")
-    creator_id = payload.get("creator_id")
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
 
+    text = payload.get("text")
+    if not isinstance(text, str) or not text.strip():
+        return jsonify({"error": "text is required and must be a non-empty string."}), 400
+    if len(text) > MAX_TEXT_CHARS:
+        return jsonify({"error": f"text must be {MAX_TEXT_CHARS} characters or fewer."}), 400
+
+    creator_id = payload.get("creator_id")
+    if not isinstance(creator_id, str) or not creator_id.strip():
+        return jsonify({"error": "creator_id is required and must be a non-empty string."}), 400
+
+    # detector.py loads the model on the first call and reuses it after that.
+    try:
+        model_score = detector.model_signal(text)
+    except ValueError as exc:  # text under 3 tokens is too short to score
+        return jsonify({"error": str(exc)}), 400
+
+    content_id = str(uuid.uuid4())
+    guess = "ai" if model_score >= 0.5 else "human"
+
+    audit.log_decision(
+        content_id=content_id,
+        creator_id=creator_id,
+        guess=guess,
+        model_score=model_score,
+        status="decided",
+    )
+
+    # confidence and label are placeholders until milestones 4 and 5.
     return jsonify({
-        "content_id": "test-123",
-        "guess": "human",
-        "confidence": 0.5,
+        "content_id": content_id,
+        "guess": guess,
+        "confidence": model_score,
         "label": "placeholder",
+        "model_score": model_score,
     }), 200
 
 
