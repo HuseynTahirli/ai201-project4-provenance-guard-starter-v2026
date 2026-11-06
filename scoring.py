@@ -22,25 +22,27 @@ def combine_signals(model_score: float, style_score: float) -> float:
     """
     Combine two 0–1 signals into one 0–1 score. Higher means more likely AI.
 
-    Rule: combined = 0.7 * model_score + 0.3 * style_score. If the signals are
-    more than 0.2 apart and combined is above 0.5, pull it halfway toward 0.5:
-    combined = 0.5 + (combined - 0.5) * 0.5. If combined is 0.5 or below, leave
-    it alone. Round to 4 decimals. The numbers live in config.py.
+    Rule: combined = 0.7 * model_score + 0.3 * style_score. If combined is above
+    0.5, and either style_score is more than 0.2 above model_score or style_score
+    is below 0.56, cap it just under the AI threshold:
+    combined = min(combined, DISAGREEMENT_CAP). Round to 4 decimals. The numbers
+    live in config.py.
 
-    Why: signal one is more robust to light edits, so it gets more weight.
-    Signal two over-reads formal writing, so disagreement should block a
-    confident AI call, but it should not make a human score less sure.
+    Why: signal one is more robust to light edits, so it gets more weight. The
+    AI label needs support from both signals, so it is blocked when style
+    over-reads (signal two over-reads formal writing) or gives almost no
+    support. A human score is left alone. The score never falls as the model
+    score rises.
     """
     combined = config.WEIGHT_MODEL * model_score + config.WEIGHT_STYLE * style_score
 
-    # Rounded because float noise puts abs(0.8 - 0.6) just above 0.2, and a gap
-    # of exactly 0.2 doesn't count as disagreement.
-    gap = round(abs(model_score - style_score), config.SCORE_DECIMALS)
-    if gap > config.DISAGREEMENT_GAP and combined > config.SCORE_MIDPOINT:
-        combined = (
-            config.SCORE_MIDPOINT
-            + (combined - config.SCORE_MIDPOINT) * config.DISAGREEMENT_SHRINK
-        )
+    # Rounded because float noise puts 0.8 - 0.6 just above 0.2, and a lead of
+    # exactly 0.2 doesn't count as over-reading.
+    style_lead = round(style_score - model_score, config.SCORE_DECIMALS)
+    style_over_reads = style_lead > config.DISAGREEMENT_GAP
+    style_too_weak = style_score < config.STYLE_SUPPORT_MIN
+    if combined > config.SCORE_MIDPOINT and (style_over_reads or style_too_weak):
+        combined = min(combined, config.DISAGREEMENT_CAP)
 
     return round(combined, config.SCORE_DECIMALS)
 

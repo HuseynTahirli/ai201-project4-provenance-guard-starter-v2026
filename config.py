@@ -80,14 +80,14 @@ EVENNESS_HUMAN_AT = 1.0   # this uneven or more: fully human-leaning
 
 
 # ─── Scoring (Milestone 4) ───────────────────────────────────────────────────
-# How much each signal counts toward the combined score, and how disagreement
-# between them pulls that score toward the midpoint. See combine_signals.
+# How much each signal counts toward the combined score, and when a weak or
+# over-reading style score caps it. See combine_signals. The cap and the style
+# minimum are defined below, after AI_THRESHOLD.
 
 WEIGHT_MODEL = 0.7
 WEIGHT_STYLE = 0.3
 
-DISAGREEMENT_GAP = 0.2       # signals further apart than this disagree
-DISAGREEMENT_SHRINK = 0.5    # keep this share of the distance from the midpoint
+DISAGREEMENT_GAP = 0.2       # style this far above the model is over-reading
 
 SCORE_MIDPOINT = 0.5
 SCORE_DECIMALS = 4
@@ -108,6 +108,14 @@ SCORE_DECIMALS = 4
 
 HUMAN_THRESHOLD = 0.35
 AI_THRESHOLD = 0.70
+
+# A blocked score can't go above this, which stays just under the AI line.
+DISAGREEMENT_CAP = AI_THRESHOLD - 0.01
+
+# A style score below this gives too little support for an AI call. It's where
+# the score at the disagreement gap (style + WEIGHT_MODEL * gap) reaches the AI
+# line. Rounded so float noise can't move the boundary off 0.56.
+STYLE_SUPPORT_MIN = round(AI_THRESHOLD - WEIGHT_MODEL * DISAGREEMENT_GAP, SCORE_DECIMALS)
 
 # `scoring.label_ranges()` prints the bands; the reachable range is a different
 # question.

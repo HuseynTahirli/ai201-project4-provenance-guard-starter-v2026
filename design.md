@@ -52,9 +52,13 @@ POST /appeal
 combine_signals in scoring.py merges the two scores. The numbers live in config.py.
 
 1. combined = 0.7 * model_score + 0.3 * style_score
-2. If abs(model_score - style_score) > 0.2 and combined is above 0.5, pull the score halfway toward 0.5: combined = 0.5 + (combined - 0.5) * 0.5. If combined is 0.5 or below, leave it alone.
+2. If combined is above 0.5, and either style_score - model_score (rounded to 4 decimals) is greater than 0.2 or style_score is below 0.56, cap the score just under the AI threshold: combined = min(combined, 0.69). If combined is 0.5 or below, leave it alone.
 3. Round to 4 decimals.
 
 score_to_label then sets the guess and label from combined: 0.70 or higher is "ai", 0.35 or lower is "human", and anything between is "unsure". The route returns combined as confidence.
 
-Signal one gets more weight because it is more robust to light edits. Signal two over-reads formal writing, so disagreement should block a confident AI call, but it should not make a human score less sure.
+Signal one gets more weight because it is more robust to light edits. The AI label needs support from both signals, so it is blocked when style over-reads (signal two over-reads formal writing) or gives almost no support. A human score is left alone. The score never falls as the model score rises, and test_scoring.py checks that.
+
+The numbers: the gap (DISAGREEMENT_GAP) is 0.2. The cap (DISAGREEMENT_CAP) is AI_THRESHOLD - 0.01 = 0.69. The style minimum (STYLE_SUPPORT_MIN) is AI_THRESHOLD - WEIGHT_MODEL * DISAGREEMENT_GAP = 0.70 - 0.7 * 0.2 = 0.56.
+
+One thing this does not block: when style is at least 0.56, a model score far above it can still reach the AI label. For example, model 0.95 and style 0.6 gives 0.845.
