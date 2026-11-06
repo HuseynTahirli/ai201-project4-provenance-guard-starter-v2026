@@ -39,6 +39,19 @@
 <!-- The path a submission takes, from arriving to the label a reader sees.
      Six or seven steps — this is the trace you wrote in Milestone 1. -->
 
+This is a small web service. A writing site sends it text, and it sends back a label a reader can understand. Here's the path one submission takes:
+
+1. A site sends `POST /submit` with `text` and `creator_id`. `app.py::submit` receives it.
+2. Input check. The route returns a 400 with a plain error if the body isn't a JSON object, if `text` is missing, empty or over 5,000 characters, or if `creator_id` is missing or empty. Nothing gets logged for a 400.
+3. Signal one. `detector.py::model_signal` runs GPT-2 on my machine and returns a score from 0 to 1. Higher means more likely AI. Text under 3 tokens can't be scored, so it also gets a 400.
+4. Signal two. `stylometry.py::style_signal` measures the shape of the text and returns a second score from 0 to 1. Higher means more likely AI.
+5. `scoring.py::combine_signals` merges the two scores into one, using the rule further down.
+6. `scoring.py::score_to_label` turns that score into a guess (`ai`, `human` or `unsure`) and the text the reader sees.
+7. `audit.py::log_decision` writes one JSON line to `logs/audit.jsonl` with the timestamp, `content_id`, `creator_id`, guess, both signal scores, combined score, label and status. The route then returns `content_id`, `guess`, `confidence`, `label`, `model_score` and `style_score`.
+
+`confidence` is the combined score, so higher always means more likely AI. It isn't how sure the system is about its guess.
+
+**The appeal path.** A writer who thinks the label is wrong sends `POST /appeal` with `content_id` and `reasoning`. Bad input gets a 400 and an unknown `content_id` gets a 404, and neither gets logged. Otherwise `audit.py::log_appeal` adds a new entry after the original decision, with status `under_review` and the reasoning. The decision entry doesn't change, so it still says `decided` and the latest entry shows the current status. `GET /log` shows both. A writer can appeal again and each one is recorded. Nothing re-checks the text automatically.
 
 
 ---
@@ -53,35 +66,75 @@
 
 ### Signal one — the model signal
 
-**What it measures:**
+**What it measures:** How predictable the text is to GPT-2, which is called perplexity. `detector.py` runs the model locally and reads up to the first 400 tokens. `model_signal` then squashes perplexity onto 0 to 1 with `1 / (1 + (perplexity / 45) ** 1.6)`. Low perplexity gives a high score, and a perplexity of 45 gives exactly 0.5.
 
-**Why that might differ between human and AI writing:**
+**Why that might differ between human and AI writing:** A language model writes by picking likely next words, so AI text tends to be easy for a model to predict. People wander more. We pick odd words and make abrupt turns.
 
-**What it can't see:**
+**What it can't see:** Who wrote the text, what it means, or why it was written. Predictable isn't the same as machine written. Plain writing with common words can score as AI, and that includes people writing in a second language. Dense writing full of rare words can score as human. Lightly edited AI text can slip past it. Anything after the first 400 tokens doesn't count.
 
 ### Signal two — the style signal
 
-**What it measures:**
+**What it measures:** The shape of the text, using three features from `stylometry.py`. Each one gets mapped onto 0 (leans human) to 1 (leans AI), clamped, and `style_signal` averages the three. The ranges are in `config.py`.
 
-**Why that might differ between human and AI writing:**
+- Sentence length spread: standard deviation of words per sentence, divided by the mean. 0.25 or lower scores 1. 0.75 or higher scores 0.
+- Unique word ratio: unique words divided by total words. From 0.45 to 0.75 scores 0. The score climbs to 1 at 0.30 (very repetitive) and at 0.95 (almost nothing repeats).
+- Punctuation: whichever of these two looks more like AI sets the score. Density is marks per word, where 0.03 or lower scores 1 and 0.12 or higher scores 0. Evenness is how much density varies between sentences, where 0.25 or lower scores 1 and 1.0 or higher scores 0.
 
-**What it can't see:**
+Text with fewer than 2 sentences or under 20 words is too short to measure, so `style_signal` returns 0.5.
+
+**Why that might differ between human and AI writing:** AI often writes sentences of similar length with steady punctuation and even word choice. People are lumpier. A three word sentence can sit right next to a forty word one.
+
+**What it can't see:** What the text says. It doesn't read anything. A careful human who writes evenly looks like AI, and my formal sample scored higher on this signal than my AI sample did. An AI told to vary its rhythm looks human. Short texts usually repeat few words, which pushes the vocabulary score up even for a person. Casual writing with no punctuation scores as AI on the punctuation feature.
 
 ### The combining rule
 
 <!-- Write the rule in words, then give the numbers. What happens when the two
      signals disagree? -->
 
-**The rule:**
+**The rule:** Take a weighted average of the two signals, with more weight on the model. Then check whether the style signal backs up an AI call. If the score is above 0.5, and the style score is either more than 0.2 above the model score or below 0.56, the score gets capped at 0.69. That's just under the AI line, so the AI label needs support from both signals. A score of 0.5 or below is left alone, so disagreement never makes a human score less sure. For a fixed style score, the score never falls as the model score rises. `test_scoring.py` checks that.
+
+```
+combined = 0.7 * model_score + 0.3 * style_score
+
+if combined > 0.5 and (round(style_score - model_score, 4) > 0.2 or style_score < 0.56):
+    combined = min(combined, 0.69)
+
+combined = round(combined, 4)
+```
 
 **The numbers:**
 
-**Where it lives:** `scoring.py::combine_signals`
+| What | Value | Name in `config.py` |
+|---|---|---|
+| Model weight | 0.7 | `WEIGHT_MODEL` |
+| Style weight | 0.3 | `WEIGHT_STYLE` |
+| Gap where style counts as over-reading | 0.2 | `DISAGREEMENT_GAP` |
+| Style support minimum, `AI_THRESHOLD - WEIGHT_MODEL * DISAGREEMENT_GAP` | 0.56 | `STYLE_SUPPORT_MIN` |
+| Cap, `AI_THRESHOLD - 0.01` | 0.69 | `DISAGREEMENT_CAP` |
+| AI label at or above | 0.70 | `AI_THRESHOLD` |
+| Human label at or below | 0.35 | `HUMAN_THRESHOLD` |
+
+Anything between 0.35 and 0.70 gets the unsure label.
+
+**Where it lives:** `scoring.py::combine_signals`, with the numbers in `config.py`.
 
 <!-- ⚠️ The grader checks your code against that line. If your rule lives
      somewhere else, say where. -->
 
 **A case where my two signals split, and what my rule does with it:**
+
+My `formal_human` sample is a formal paragraph about a committee meeting. In my run the model gave it 0.5589 and the style signal gave it 0.7686, so style was 0.2097 above the model. That counts as over-reading, so the cap applies. The combined score was 0.6218, which is already under 0.69, so the cap didn't change the number. The 0.7 weight on the model is what kept it low. The result was the unsure label, which is what I want for a human writer.
+
+The cap only changes the number when the score would otherwise pass 0.69. With a model score of 0.6 and a style score of 0.9, the average is exactly 0.69. With 0.7 and 1.0, it's 0.79 and gets cut to 0.69, so the reader sees unsure instead of an AI label.
+
+**Known limits**
+
+- Formal human writing is the false positive risk. My `formal_human` sample got unsure, but its style score of 0.7686 is higher than my AI sample's 0.7211. If the model had scored it about 0.67 or higher, it would have got the AI label.
+- One-sentence text can never get the AI label. Its style score is always 0.5, which is below the 0.56 minimum, so it can't pass the cap. The same goes for any text under 20 words.
+- Casual human text can land in unsure. My `casual_human` sample scores around 0.55, so that's where it lands. It isn't consistent though. My shorter `typo_casual` sample scored 0.3097 and got the human label.
+- A person can lower the model score by editing AI text until the signals disagree. Once the style score is more than 0.2 above the model score, the AI label is blocked. If the model score drops far enough, the text can even get the human label.
+- Anyone with a `content_id` can appeal, as many times as they want. Nothing notifies a reviewer yet, even though the labels and the appeal response say a person will look.
+- The style ranges aren't calibrated. They're my estimates and I haven't tuned them against real writing. It matters because 0.56 decides whether a text can get the AI label at all, and `casual_human` sits at 0.5254.
 
 
 
