@@ -1,8 +1,8 @@
 """
 Turning two numbers into one, and one number into something a person can read.
-← YOU BUILD THIS IN MILESTONES 4 AND 5
+← `score_to_label` IS STILL TO BUILD IN MILESTONE 5
 
-Two functions live here, and both are stubs.
+Two functions live here. `combine_signals` is built; `score_to_label` is a stub.
 
 `combine_signals` is where your false-positive decision from Milestone 1
 actually gets made. Everything above it — the labels, the appeal path — is
@@ -21,42 +21,29 @@ import config
 
 def combine_signals(model_score: float, style_score: float) -> float:
     """
-    Combine two 0–1 signals into one 0–1 score. ← TODO (Milestone 4)
+    Combine two 0–1 signals into one 0–1 score. Higher means more likely AI.
 
-    Both inputs point the same way: higher means more likely AI. Your output
-    should too.
+    Rule: combined = 0.7 * model_score + 0.3 * style_score. If the signals are
+    more than 0.2 apart, pull that halfway toward 0.5:
+    combined = 0.5 + (combined - 0.5) * 0.5. Round to 4 decimals. The numbers
+    live in config.py.
 
-    Args:
-        model_score: from `detector.model_signal` — how predictable the text is.
-        style_score: from `stylometry.style_signal` — the shape of the text.
-
-    Returns:
-        A float from 0.0 (confidently human) to 1.0 (confidently AI).
-
-    ⚠️ **Write the rule down before you code it, and put the numbers in your
-    README.** A weighted average is the obvious choice and it is not the only
-    one. Things worth thinking about:
-
-      - **What happens when they disagree?** One signal at 0.9 and the other at
-        0.1 averages to 0.5 — "unsure". Is that what you want? It might be
-        exactly right: two methods disagreeing IS uncertainty. Or you might
-        decide one signal is more trustworthy when they split.
-
-      - **Which way do you want to be wrong?** Weighting toward the signal that
-        reads more human means fewer false accusations and more AI text
-        getting through. There's no weighting that avoids the trade.
-
-      - Milestone 4 asks you to find a case where your two signals split and
-        write it down. That case is what this rule exists to handle.
-
-    The weights in config.py are placeholders. Change them, or ignore them and
-    write a different rule.
+    Why: signal one is more robust to light edits, so it gets more weight.
+    Signal two over-reads formal writing, so disagreement should make the
+    system less sure, not more.
     """
-    # TODO: replace this
-    return (
-        config.WEIGHT_MODEL_SIGNAL * model_score
-        + config.WEIGHT_STYLE_SIGNAL * style_score
-    )
+    combined = config.WEIGHT_MODEL * model_score + config.WEIGHT_STYLE * style_score
+
+    # Rounded because float noise puts abs(0.8 - 0.6) just above 0.2, and a gap
+    # of exactly 0.2 doesn't count as disagreement.
+    gap = round(abs(model_score - style_score), config.SCORE_DECIMALS)
+    if gap > config.DISAGREEMENT_GAP:
+        combined = (
+            config.SCORE_MIDPOINT
+            + (combined - config.SCORE_MIDPOINT) * config.DISAGREEMENT_SHRINK
+        )
+
+    return round(combined, config.SCORE_DECIMALS)
 
 
 def score_to_label(score: float) -> tuple[str, str]:

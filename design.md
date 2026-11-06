@@ -8,7 +8,7 @@
 4. Signal two, stylometry.py. It measures the text as text: sentence length spread, unique word ratio, punctuation density. It returns a second 0 to 1 score.
 5. combine_signals in scoring.py merges the two scores using the weights in config.py. This gives one confidence score and a guess (ai or human).
 6. score_to_label in scoring.py turns the score into one of three labels: high-confidence AI, high-confidence human, or unsure. This is the text the reader sees.
-7. audit.py writes one JSON line to logs/audit.jsonl (timestamp, content_id, creator_id, both signal scores, combined score, guess, status). The route then returns content_id, guess, confidence, and label.
+7. audit.py writes one JSON line to logs/audit.jsonl (timestamp, content_id, creator_id, both signal scores, combined score, guess, status). The route then returns content_id, guess, confidence, label, model_score, and style_score.
 
 ## 2. The two signals
 
@@ -38,7 +38,7 @@ This is why the high-confidence AI threshold has to sit high. A wrong accusation
 
 POST /submit
 - In (JSON): text (string, required), creator_id (string, required)
-- Out 200 (JSON): content_id (string), guess ("ai" or "human"), confidence (number 0 to 1), label (string, the reader-facing text)
+- Out 200 (JSON): content_id (string), guess ("ai" or "human"), confidence (number 0 to 1, the combined score, higher means more likely AI), label (string, the reader-facing text), model_score (number 0 to 1), style_score (number 0 to 1)
 - Out 400 (JSON): error (string) when text or creator_id is missing, empty, or text is too long
 
 POST /appeal
@@ -46,3 +46,15 @@ POST /appeal
 - Out 200 (JSON): content_id, status ("under_review"), message (string confirming the appeal was recorded)
 - Out 400 (JSON): error when reasoning is missing or empty
 - Out 404 (JSON): error when the content_id does not exist
+
+## 5. Combining rule
+
+combine_signals in scoring.py merges the two scores. The numbers live in config.py.
+
+1. combined = 0.7 * model_score + 0.3 * style_score
+2. If abs(model_score - style_score) > 0.2, pull the score halfway toward 0.5: combined = 0.5 + (combined - 0.5) * 0.5
+3. Round to 4 decimals.
+
+The guess is "ai" if combined is 0.5 or higher, otherwise "human". The route returns combined as confidence.
+
+Signal one gets more weight because it is more robust to light edits. Signal two over-reads formal writing, so disagreement should make the system less sure, not more.

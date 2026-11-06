@@ -10,6 +10,7 @@ short for the style signal to measure.
 """
 
 import detector
+import scoring
 import stylometry
 
 CASUAL_HUMAN = "ok so i finally got around to cleaning my room yesterday and honestly it took like four hours. found a charger i lost in september. also a sandwich bag with who knows what in it, i just threw it out without looking. my roommate wont stop making fun of me but whatever, at least i can see the floor now. going to try to keep it this way for a week and see what happens"
@@ -33,6 +34,7 @@ COLUMNS = [
     ("words", 6),
     ("model_signal", 13),
     ("style_signal", 13),
+    ("combined", 9),
     ("spread_score", 13),
     ("vocab_score", 12),
     ("punct_score", 11),
@@ -63,12 +65,15 @@ def main() -> None:
     print_row(["-" * width for _, width in COLUMNS])
 
     for name, text in TEXTS:
+        model_score = detector.model_signal(text)
+        style_score = stylometry.style_signal(text)
         print_row([
             name,
             str(len(stylometry.sentences(text))),
             str(len(stylometry.words(text))),
-            f"{detector.model_signal(text):.4f}",
-            f"{stylometry.style_signal(text):.4f}",
+            f"{model_score:.4f}",
+            f"{style_score:.4f}",
+            f"{scoring.combine_signals(model_score, style_score):.4f}",
             *feature_scores(text),
         ])
 

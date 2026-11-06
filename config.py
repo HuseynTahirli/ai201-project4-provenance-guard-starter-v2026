@@ -80,14 +80,17 @@ EVENNESS_HUMAN_AT = 1.0   # this uneven or more: fully human-leaning
 
 
 # ─── Scoring (Milestone 4) ───────────────────────────────────────────────────
-# How much each signal counts toward the combined score.
-#
-# ⚠️ These are placeholders. Milestone 4 asks you to write your combining rule
-# down BEFORE you code it, and to put the numbers in your README. Whatever you
-# decide, it goes here.
+# How much each signal counts toward the combined score, and how disagreement
+# between them pulls that score toward the midpoint. See combine_signals.
 
-WEIGHT_MODEL_SIGNAL = 0.5
-WEIGHT_STYLE_SIGNAL = 0.5
+WEIGHT_MODEL = 0.7
+WEIGHT_STYLE = 0.3
+
+DISAGREEMENT_GAP = 0.2       # signals further apart than this disagree
+DISAGREEMENT_SHRINK = 0.5    # keep this share of the distance from the midpoint
+
+SCORE_MIDPOINT = 0.5         # also where the guess flips from human to ai
+SCORE_DECIMALS = 4
 
 
 # ─── Thresholds (Milestone 5) ────────────────────────────────────────────────
