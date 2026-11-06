@@ -89,7 +89,7 @@ WEIGHT_STYLE = 0.3
 DISAGREEMENT_GAP = 0.2       # signals further apart than this disagree
 DISAGREEMENT_SHRINK = 0.5    # keep this share of the distance from the midpoint
 
-SCORE_MIDPOINT = 0.5         # also where the guess flips from human to ai
+SCORE_MIDPOINT = 0.5
 SCORE_DECIMALS = 4
 
 
@@ -97,9 +97,9 @@ SCORE_DECIMALS = 4
 # Where one label becomes another. Scores run 0.0 (confidently human) to 1.0
 # (confidently AI).
 #
-#   score < HUMAN_THRESHOLD          -> high-confidence human
+#   score <= HUMAN_THRESHOLD         -> high-confidence human
 #   between the two                  -> unsure
-#   score > AI_THRESHOLD             -> high-confidence AI
+#   score >= AI_THRESHOLD            -> high-confidence AI
 #
 # ⚠️ This is where your false-positive decision from Milestone 1 actually gets
 # made. Widening the unsure band means fewer wrong accusations and more AI text
@@ -107,11 +107,15 @@ SCORE_DECIMALS = 4
 # that decide who pays for it.
 
 HUMAN_THRESHOLD = 0.35
-AI_THRESHOLD = 0.65
+AI_THRESHOLD = 0.70
 
-# These are starting values. The real thresholds get set in Milestone 5.
 # `scoring.label_ranges()` prints the bands; the reachable range is a different
 # question.
+
+# The exact text a reader sees for each label.
+AI_LABEL = "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look."
+HUMAN_LABEL = "Our checks suggest this was written by a person."
+UNSURE_LABEL = "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged."
 
 
 # ─── Rate limiting (UNIT 8) ──────────────────────────────────────────────────
