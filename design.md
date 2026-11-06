@@ -43,9 +43,11 @@ POST /submit
 
 POST /appeal
 - In (JSON): content_id (string, required), reasoning (string, required)
-- Out 200 (JSON): content_id, status ("under_review"), message (string confirming the appeal was recorded)
-- Out 400 (JSON): error when reasoning is missing or empty
-- Out 404 (JSON): error when the content_id does not exist
+- Out 200 (JSON): content_id, status ("under_review"), message (string confirming the appeal was recorded and that a person will review it). An item already under_review can be appealed again, and each appeal is recorded.
+- Out 400 (JSON): error (string) when the body is not a JSON object, when content_id or reasoning is missing, empty, or not a string, or when reasoning is over 2,000 characters. Nothing is logged.
+- Out 404 (JSON): error (string) when the content_id is not in the log. Nothing is logged.
+- Log: an appeal adds a new entry after the original decision (timestamp, content_id, creator_id, event "appeal", status "under_review", reasoning). The decision entry is not changed, so its status stays "decided" and the latest entry shows the current status. GET /log shows both.
+- Nothing re-checks the text automatically.
 
 ## 5. Combining rule
 

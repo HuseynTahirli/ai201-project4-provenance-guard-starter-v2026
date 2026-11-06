@@ -37,6 +37,7 @@ import stylometry
 app = Flask(__name__)
 
 MAX_TEXT_CHARS = 5000
+MAX_REASONING_CHARS = 2000
 
 
 # ── Rate limiting — UNIT 8 ────────────────────────────────────────────────────
@@ -254,31 +255,44 @@ def submit():
 @app.post("/appeal")
 def appeal():
     """
-    A writer says you got it wrong. ← TODO — Milestone 5
+    A writer says you got it wrong.
 
     Expects JSON:
         {"content_id": "...", "reasoning": "..."}
 
-    Should:
-      1. Check the content_id actually exists — `audit.entries_for(id)` tells
-         you. A typo here fails silently and looks like a broken endpoint,
-         which is the single most common way this milestone eats an hour.
-      2. Record the appeal with `audit.log_appeal(...)`, which moves the item
-         to `under_review`.
-      3. Confirm to the writer. No automatic re-checking needed.
+    Appends an appeal entry to the log after the original decision, which moves
+    the item to `under_review` and leaves the decision entry as it was. Appealing
+    again records another entry. Nothing re-checks the text automatically.
 
     This is the smallest endpoint in the project and the one that matters most
     to the person on the other end. It's the only thing standing between a
     wrong accusation and nothing at all.
     """
-    payload = request.get_json(silent=True) or {}
+    payload = request.get_json(silent=True)
+    if not isinstance(payload, dict):
+        return jsonify({"error": "Request body must be a JSON object."}), 400
 
-    # TODO: delete this and build the route.
+    content_id = payload.get("content_id")
+    if not isinstance(content_id, str) or not content_id.strip():
+        return jsonify({"error": "content_id is required and must be a non-empty string."}), 400
+
+    reasoning = payload.get("reasoning")
+    if not isinstance(reasoning, str) or not reasoning.strip():
+        return jsonify({"error": "reasoning is required and must be a non-empty string."}), 400
+    if len(reasoning) > MAX_REASONING_CHARS:
+        return jsonify({"error": f"reasoning must be {MAX_REASONING_CHARS} characters or fewer."}), 400
+
+    entries = audit.entries_for(content_id)
+    if not entries:
+        return jsonify({"error": f"No submission found with content_id {content_id}."}), 404
+
+    audit.log_appeal(content_id, entries[0]["creator_id"], reasoning)
+
     return jsonify({
-        "error": "not_implemented",
-        "message": "POST /appeal isn't built yet — see the TODO in app.py.",
-        "you_sent": payload,
-    }), 501
+        "content_id": content_id,
+        "status": "under_review",
+        "message": "Your appeal has been recorded. A person will review it.",
+    }), 200
 
 
 # ── Already works ─────────────────────────────────────────────────────────────
