@@ -52,9 +52,9 @@ POST /appeal
 combine_signals in scoring.py merges the two scores. The numbers live in config.py.
 
 1. combined = 0.7 * model_score + 0.3 * style_score
-2. If abs(model_score - style_score) > 0.2, pull the score halfway toward 0.5: combined = 0.5 + (combined - 0.5) * 0.5
+2. If abs(model_score - style_score) > 0.2 and combined is above 0.5, pull the score halfway toward 0.5: combined = 0.5 + (combined - 0.5) * 0.5. If combined is 0.5 or below, leave it alone.
 3. Round to 4 decimals.
 
 The guess is "ai" if combined is 0.5 or higher, otherwise "human". The route returns combined as confidence.
 
-Signal one gets more weight because it is more robust to light edits. Signal two over-reads formal writing, so disagreement should make the system less sure, not more.
+Signal one gets more weight because it is more robust to light edits. Signal two over-reads formal writing, so disagreement should block a confident AI call, but it should not make a human score less sure.

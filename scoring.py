@@ -24,20 +24,20 @@ def combine_signals(model_score: float, style_score: float) -> float:
     Combine two 0–1 signals into one 0–1 score. Higher means more likely AI.
 
     Rule: combined = 0.7 * model_score + 0.3 * style_score. If the signals are
-    more than 0.2 apart, pull that halfway toward 0.5:
-    combined = 0.5 + (combined - 0.5) * 0.5. Round to 4 decimals. The numbers
-    live in config.py.
+    more than 0.2 apart and combined is above 0.5, pull it halfway toward 0.5:
+    combined = 0.5 + (combined - 0.5) * 0.5. If combined is 0.5 or below, leave
+    it alone. Round to 4 decimals. The numbers live in config.py.
 
     Why: signal one is more robust to light edits, so it gets more weight.
-    Signal two over-reads formal writing, so disagreement should make the
-    system less sure, not more.
+    Signal two over-reads formal writing, so disagreement should block a
+    confident AI call, but it should not make a human score less sure.
     """
     combined = config.WEIGHT_MODEL * model_score + config.WEIGHT_STYLE * style_score
 
     # Rounded because float noise puts abs(0.8 - 0.6) just above 0.2, and a gap
     # of exactly 0.2 doesn't count as disagreement.
     gap = round(abs(model_score - style_score), config.SCORE_DECIMALS)
-    if gap > config.DISAGREEMENT_GAP:
+    if gap > config.DISAGREEMENT_GAP and combined > config.SCORE_MIDPOINT:
         combined = (
             config.SCORE_MIDPOINT
             + (combined - config.SCORE_MIDPOINT) * config.DISAGREEMENT_SHRINK
