@@ -47,6 +47,38 @@ DETECTOR_MODEL = os.getenv("AI201_DETECTOR_MODEL", "gpt2")
 DETECTOR_MAX_TOKENS = 400
 
 
+# ─── Style signal (Milestone 4) ──────────────────────────────────────────────
+# The ranges stylometry.py uses to map each raw measure onto 0 (human-leaning)
+# to 1 (AI-leaning). Values outside a range clamp. These are starting estimates,
+# not calibrated numbers: check them against real text before relying on them.
+
+# Below either minimum there is too little to measure, so the score is neutral.
+STYLE_MIN_SENTENCES = 2
+STYLE_MIN_WORDS = 20
+STYLE_NEUTRAL_SCORE = 0.5
+
+# Sentence length spread (stdev of words per sentence / mean).
+SPREAD_AI_AT = 0.25       # this even or more: fully AI-leaning
+SPREAD_HUMAN_AT = 0.75    # this varied or more: fully human-leaning
+
+# Unique word ratio (unique words / total words). Inside the band is human-
+# leaning. Leaving it in either direction moves toward AI-leaning.
+UNIQUE_REPETITIVE_AT = 0.30    # this repetitive or more: fully AI-leaning
+UNIQUE_BAND_LOW = 0.45
+UNIQUE_BAND_HIGH = 0.75
+UNIQUE_UNIFORM_AT = 0.95       # this little repetition or less: fully AI-leaning
+
+# Punctuation density (marks per word). The apostrophe is left out because
+# words() treats it as part of a word.
+PUNCTUATION_MARKS = ".,;:!?-–—()[]\"“”…"
+DENSITY_AI_AT = 0.03      # this sparse or sparser: fully AI-leaning
+DENSITY_HUMAN_AT = 0.12   # this dense or denser: fully human-leaning
+
+# Punctuation evenness (stdev of each sentence's density / mean of them).
+EVENNESS_AI_AT = 0.25     # this steady or steadier: fully AI-leaning
+EVENNESS_HUMAN_AT = 1.0   # this uneven or more: fully human-leaning
+
+
 # ─── Scoring (Milestone 4) ───────────────────────────────────────────────────
 # How much each signal counts toward the combined score.
 #
