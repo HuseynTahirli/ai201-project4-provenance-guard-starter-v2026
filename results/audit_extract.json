@@ -1,0 +1,786 @@
+{
+  "count": 79,
+  "entries": [
+    {
+      "combined_score": null,
+      "content_id": "e497e111-7a19-4c2e-80af-bb01efe51103",
+      "creator_id": "huseyn",
+      "guess": "ai",
+      "label": null,
+      "model_score": 0.8149,
+      "status": "decided",
+      "style_score": null,
+      "timestamp": "2026-11-05T00:16:36+00:00"
+    },
+    {
+      "combined_score": null,
+      "content_id": "b3f83cbd-8ac7-4b3e-bad4-5017205ec68a",
+      "creator_id": "huseyn",
+      "guess": "ai",
+      "label": null,
+      "model_score": 0.8149,
+      "status": "decided",
+      "style_score": null,
+      "timestamp": "2026-11-05T00:16:41+00:00"
+    },
+    {
+      "combined_score": 0.7693,
+      "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+      "creator_id": "huseyn",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.7899,
+      "status": "decided",
+      "style_score": 0.7211,
+      "timestamp": "2026-11-06T07:28:00+00:00"
+    },
+    {
+      "combined_score": 0.6218,
+      "content_id": "ec832b01-e12a-47d3-9138-dc716370c1d1",
+      "creator_id": "huseyn",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5589,
+      "status": "decided",
+      "style_score": 0.7686,
+      "timestamp": "2026-11-06T07:28:00+00:00"
+    },
+    {
+      "combined_score": 0.3097,
+      "content_id": "2f03fbd9-7c7e-4da3-a62c-f64f482bd89f",
+      "creator_id": "huseyn",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2282,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-06T07:28:00+00:00"
+    },
+    {
+      "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+      "creator_id": "huseyn",
+      "event": "appeal",
+      "reasoning": "I wrote this myself for a class assignment.",
+      "status": "under_review",
+      "timestamp": "2026-11-06T07:33:11+00:00"
+    },
+    {
+      "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+      "creator_id": "huseyn",
+      "event": "appeal",
+      "reasoning": "I wrote this myself for a class assignment.",
+      "status": "under_review",
+      "timestamp": "2026-11-06T07:33:23+00:00"
+    },
+    {
+      "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+      "creator_id": "huseyn",
+      "event": "appeal",
+      "reasoning": "I wrote this myself for a class assignment.",
+      "status": "under_review",
+      "timestamp": "2026-11-07T06:23:32+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "2343e813-b15e-4972-b168-0a612dc72b8f",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:27+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "3cb8abc4-9ffe-4453-91d5-3233f4d35b97",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:27+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "87a099e6-6703-45cc-93bd-4ab77eb63c17",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:27+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "180dad6a-0f52-439f-a112-7de045ad13a4",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:27+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "7fabc4d5-c9bc-4e4f-98c5-b7279f7286de",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:27+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "572697ef-6465-4999-b9db-683ab4411bd8",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "90a82129-339e-4b5c-9603-9751dd4909e5",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "a54706d7-0880-48bf-b2f2-897e5d76fe18",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "1afb7981-1557-4ec7-ba70-7424468a5f7a",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "combined_score": 0.3324,
+      "content_id": "84453187-b0da-4c20-8128-f609ddf34b6e",
+      "creator_id": "flood_tester",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2587,
+      "status": "decided",
+      "style_score": 0.5045,
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "creator_id": "flood_tester",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "creator_id": "flood_tester",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "creator_id": "flood_tester",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "creator_id": "flood_tester",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "creator_id": "flood_tester",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:39:28+00:00"
+    },
+    {
+      "combined_score": 0.3415,
+      "content_id": "50621d57-e62b-4eeb-9fbf-d160ca01cf28",
+      "creator_id": "attacker_EV01",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.1635,
+      "status": "decided",
+      "style_score": 0.7567,
+      "timestamp": "2026-11-07T06:44:54+00:00"
+    },
+    {
+      "combined_score": 0.4732,
+      "content_id": "89afaa2e-19be-4d7a-8e1c-098a204261dc",
+      "creator_id": "attacker_EV02",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5943,
+      "status": "decided",
+      "style_score": 0.1905,
+      "timestamp": "2026-11-07T06:44:55+00:00"
+    },
+    {
+      "combined_score": 0.591,
+      "content_id": "3c1823d6-bdea-464e-a524-380da59f4551",
+      "creator_id": "attacker_EV03",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.6662,
+      "status": "decided",
+      "style_score": 0.4157,
+      "timestamp": "2026-11-07T06:44:55+00:00"
+    },
+    {
+      "combined_score": 0.6652,
+      "content_id": "747dbcb9-8704-4c56-937e-cdebca83acec",
+      "creator_id": "attacker_EV04",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.6114,
+      "status": "decided",
+      "style_score": 0.7908,
+      "timestamp": "2026-11-07T06:44:55+00:00"
+    },
+    {
+      "combined_score": 0.2489,
+      "content_id": "4f82124b-b64f-4450-a6ec-9b3f478249ff",
+      "creator_id": "attacker_EV05",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.3212,
+      "status": "decided",
+      "style_score": 0.0803,
+      "timestamp": "2026-11-07T06:44:55+00:00"
+    },
+    {
+      "combined_score": 0.4376,
+      "content_id": "3ac08104-940c-44d6-aa13-2998f5ec0f95",
+      "creator_id": "attacker_EV06",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5727,
+      "status": "decided",
+      "style_score": 0.1224,
+      "timestamp": "2026-11-07T06:44:56+00:00"
+    },
+    {
+      "combined_score": 0.5603,
+      "content_id": "73b0dabd-ccf2-49ea-a2e2-894dbeb7960e",
+      "creator_id": "attacker_EV07",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5862,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:44:56+00:00"
+    },
+    {
+      "combined_score": 0.3216,
+      "content_id": "7112b64b-458f-47e5-aab1-952bbcfff76f",
+      "creator_id": "attacker_EV08",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2452,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:44:56+00:00"
+    },
+    {
+      "combined_score": 0.5978,
+      "content_id": "b56ea263-446e-4091-8853-9bf0a6905dd5",
+      "creator_id": "attacker_EV09",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.7042,
+      "status": "decided",
+      "style_score": 0.3497,
+      "timestamp": "2026-11-07T06:44:56+00:00"
+    },
+    {
+      "combined_score": 0.9336,
+      "content_id": "ad72fd55-af1d-4c26-b82e-503acd810a24",
+      "creator_id": "attacker_EV10",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.9792,
+      "status": "decided",
+      "style_score": 0.8271,
+      "timestamp": "2026-11-07T06:44:56+00:00"
+    },
+    {
+      "combined_score": 0.5648,
+      "content_id": "0b71351c-5301-421a-af64-f5d0cf4e5b1d",
+      "creator_id": "attacker_FP01",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.6175,
+      "status": "decided",
+      "style_score": 0.4419,
+      "timestamp": "2026-11-07T06:44:57+00:00"
+    },
+    {
+      "combined_score": 0.7106,
+      "content_id": "aae60204-3553-4200-9600-952ccc770eff",
+      "creator_id": "attacker_FP02",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.7387,
+      "status": "decided",
+      "style_score": 0.6452,
+      "timestamp": "2026-11-07T06:44:57+00:00"
+    },
+    {
+      "combined_score": 0.7369,
+      "content_id": "8e8a5fd1-1a53-4173-b24a-4980355d8bd0",
+      "creator_id": "attacker_FP03",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.8051,
+      "status": "decided",
+      "style_score": 0.5778,
+      "timestamp": "2026-11-07T06:44:57+00:00"
+    },
+    {
+      "combined_score": 0.7732,
+      "content_id": "2247455a-479e-4503-bd0c-1974cab36537",
+      "creator_id": "attacker_FP04",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.8329,
+      "status": "decided",
+      "style_score": 0.634,
+      "timestamp": "2026-11-07T06:44:57+00:00"
+    },
+    {
+      "combined_score": 0.755,
+      "content_id": "41ad6bf9-26b3-4ec7-9dda-2a8bdb08fb99",
+      "creator_id": "attacker_FP05",
+      "guess": "ai",
+      "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+      "model_score": 0.8005,
+      "status": "decided",
+      "style_score": 0.6487,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.69,
+      "content_id": "9909ded3-8dc3-43b6-9cf6-bd26f618c058",
+      "creator_id": "attacker_FP06",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.8814,
+      "status": "decided",
+      "style_score": 0.4303,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.69,
+      "content_id": "c76ef880-0dce-4687-a215-e82b653ff932",
+      "creator_id": "attacker_FP07",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.8816,
+      "status": "decided",
+      "style_score": 0.2806,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.3756,
+      "content_id": "4d7e63f6-ff14-4ab4-8568-10c86c7e74bc",
+      "creator_id": "attacker_FP08",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.3223,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.4684,
+      "content_id": "3e7a28d1-d6dd-4e71-a4ca-2fc6cfde9e16",
+      "creator_id": "attacker_PI01",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.4625,
+      "status": "decided",
+      "style_score": 0.4822,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.2684,
+      "content_id": "f78617b6-6349-4e97-b81a-f75e8a5ab7a5",
+      "creator_id": "attacker_PI02",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.2044,
+      "status": "decided",
+      "style_score": 0.4176,
+      "timestamp": "2026-11-07T06:44:58+00:00"
+    },
+    {
+      "combined_score": 0.5973,
+      "content_id": "d399ab20-1226-42f9-8f4a-981786bc95bf",
+      "creator_id": "attacker_PI03",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5943,
+      "status": "decided",
+      "style_score": 0.6043,
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "combined_score": 0.5062,
+      "content_id": "06a6daf5-45f1-41d0-89de-97efa176d9e5",
+      "creator_id": "attacker_PI04",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.4998,
+      "status": "decided",
+      "style_score": 0.5213,
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "combined_score": 0.6038,
+      "content_id": "aadabda1-a7bc-4080-899f-a0d025d40f5c",
+      "creator_id": "attacker_PI05",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.6401,
+      "status": "decided",
+      "style_score": 0.5191,
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "combined_score": 0.5289,
+      "content_id": "453be7d3-2cbb-4fe9-bb54-c0c8cc198eec",
+      "creator_id": "attacker_PI06",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.5583,
+      "status": "decided",
+      "style_score": 0.4604,
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "creator_id": "attacker_MF01",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "creator_id": "attacker_MF02",
+      "event": "rejected",
+      "reason": "text_too_short",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "combined_score": 0.15,
+      "content_id": "c0257b48-83c7-40d6-98a0-53fa419a0d3d",
+      "creator_id": "attacker_MF03",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:44:59+00:00"
+    },
+    {
+      "combined_score": 0.1578,
+      "content_id": "8914fc55-f0c5-4e65-b372-a909c9c286f7",
+      "creator_id": "attacker_MF04",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0112,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:00+00:00"
+    },
+    {
+      "combined_score": 0.69,
+      "content_id": "4dd7a54e-cbd9-41fb-9e4f-603038af4e19",
+      "creator_id": "attacker_MF05",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.9976,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:00+00:00"
+    },
+    {
+      "combined_score": 0.69,
+      "content_id": "01ba90c9-a2d2-44e3-9cf1-1afa3c9f2902",
+      "creator_id": "attacker_MF06",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.9969,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "combined_score": 0.69,
+      "content_id": "038d5606-bf4f-498d-9383-8aee2e5126b4",
+      "creator_id": "attacker_MF07",
+      "guess": "unsure",
+      "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
+      "model_score": 0.9064,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_MF08",
+      "event": "rejected",
+      "reason": "text_too_long",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_RQ01",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "missing_or_empty_creator_id",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_RQ03",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_RQ04",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_RQ05",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": {
+        "id": "x"
+      },
+      "event": "rejected",
+      "reason": "missing_or_empty_creator_id",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "body_not_json_object",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "body_not_json_object",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "body_not_json_object",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "body_not_json_object",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "unknown",
+      "event": "rejected",
+      "reason": "body_not_json_object",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "creator_id": "attacker_RQ12",
+      "event": "rejected",
+      "reason": "missing_or_empty_text",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "255a47cd-5092-48c4-acb5-de3d77e011c4",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:01+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "0cc80a49-1341-4da2-93a1-e7d6ac99029c",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "d285721d-5a28-48ad-a746-c6409539c31f",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "9cc1fa24-07c8-4a70-96f0-710810096d5e",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "85de74f3-be5c-418e-90eb-ff48037292c5",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "27ce3faa-b052-4fec-9536-a7720ad5acdf",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "aa78eaef-ad5f-4bb5-9bb3-79077f77b8a6",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "e599af34-d61f-404e-98d7-40bdd08d1fc9",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "cb1616e4-a016-4a96-ac3d-b74f3082fb37",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "combined_score": 0.1701,
+      "content_id": "b6e56839-6778-4f87-a53f-775e8951058a",
+      "creator_id": "attacker_flood",
+      "guess": "human",
+      "label": "Our checks suggest this was written by a person.",
+      "model_score": 0.0287,
+      "status": "decided",
+      "style_score": 0.5,
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "creator_id": "attacker_flood",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    },
+    {
+      "creator_id": "attacker_flood",
+      "event": "rejected",
+      "limit": "10 per 1 minute",
+      "reason": "rate_limited",
+      "status": "rejected",
+      "timestamp": "2026-11-07T06:45:02+00:00"
+    }
+  ]
+}
