@@ -158,6 +158,8 @@ The cap only changes the number when the score would otherwise pass 0.69. With a
      sounding like an accusation, because the person reading it may well have
      written every word themselves. -->
 
+Most people who see this label are real writers, so I wanted it to say that nothing is wrong first. I left out the words score, threshold and confidence because nobody outside the system knows what they mean. It says "nothing has been flagged" so the writer doesn't read unsure as a soft accusation. It also doesn't offer an appeal, since there's nothing to appeal.
+
 
 
 ---
@@ -246,11 +248,15 @@ Later entries for this `content_id` are repeat appeals I ran while testing.
 
 Moment 1: the combining rule
 
-After I had both signals working, I asked Claude how to combine them. I gave it a table of four texts (casual human, formal human, clearly AI, lightly edited AI) with both scores. It suggested weighting the model signal 0.7 and the style signal 0.3, plus a rule that if the signals disagree by more than 0.2 the score gets pulled halfway toward 0.5. I said yes and Claude Code built it. Then Claude Code's own checks showed the pull also dragged low human scores up, so a casual human text could never reach the 0.3 target in my criterion 2. I had it change the pull to only apply above 0.5. A second sweep showed that a higher model score could still drop a text from the AI label to unsure. Claude's first fix, a cap, failed the same test. What I kept is the version where the AI label needs support from both signals: it gets blocked when style is more than 0.2 above the model, or when style is below 0.56. I did not come up with the numbers myself. I picked the rule shape and approved the final version after seeing the sweep.
+- *What I asked for:* After I had both signals working, I asked Claude how to combine them. I gave it a table of four texts (casual human, formal human, clearly AI, lightly edited AI) with both scores.
+- *What came back:* It suggested weighting the model signal 0.7 and the style signal 0.3, plus a rule that if the signals disagree by more than 0.2 the score gets pulled halfway toward 0.5. I said yes and Claude Code built it. Then Claude Code's own checks showed the pull also dragged low human scores up, so a casual human text could never reach the 0.3 target in my criterion 2.
+- *What I changed:* I had it change the pull to only apply above 0.5. A second sweep showed that a higher model score could still drop a text from the AI label to unsure. Claude's first fix, a cap, failed the same test. What I kept is the version where the AI label needs support from both signals: it gets blocked when style is more than 0.2 above the model, or when style is below 0.56. I did not come up with the numbers myself. I picked the rule shape and approved the final version after seeing the sweep.
 
 Moment 2: my criteria
 
-I asked Claude to write my acceptance criteria. It said the course wants them to be mine and asked me for numbers instead. I picked at most 1 of 10 for false positives, and I told it to pick the rest when I didn't know what the other numbers meant. Claude then drafted the wording of all five criteria from options it explained, and I had Claude Code commit them. Afterward Claude Code caught that my reason for criterion 5 said GPT-2 reads about 1,000 tokens, when config.py caps it at 400. We fixed that line, and it also restored the unit 8 revision rules that my replacement had removed from criteria.md. So the false positive limit is my number and the rest of the targets are Claude's drafting.
+- *What I asked for:* I asked Claude to write my acceptance criteria.
+- *What came back:* It said the course wants them to be mine and asked me for numbers instead. I picked at most 1 of 10 for false positives, and I told it to pick the rest when I didn't know what the other numbers meant. Claude then drafted the wording of all five criteria from options it explained, and I had Claude Code commit them.
+- *What I changed:* Afterward Claude Code caught that my reason for criterion 5 said GPT-2 reads about 1,000 tokens, when config.py caps it at 400. We fixed that line, and it also restored the unit 8 revision rules that my replacement had removed from criteria.md. So the false positive limit is my number and the rest of the targets are Claude's drafting.
 
 <!-- ═══════════════════════ UNIT 8 — THE TEST ═══════════════════════ -->
 
