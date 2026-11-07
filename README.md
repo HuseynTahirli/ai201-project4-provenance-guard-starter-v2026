@@ -445,6 +445,10 @@ FP03 is careful non-native English, and my system called it AI. It got a model s
 | 4.  |  |  |  |  |  |
 | 5.  |  |  |  |  |  |
 
+**Stand-in texts**
+
+The texts in `scenarios.py` are stand-ins written by Claude Code, not my own writing. Criterion 1 was not tested on my real writing, so its verdict only shows how the system treats human-style text. The human-style texts for criteria 2, 3 and 4 are stand-ins too.
+
 **Real output from one trial**, pasted as text, naming the file and function
 that produced it:
 
