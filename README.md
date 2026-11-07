@@ -261,6 +261,14 @@ Moment 2: my criteria
 - *What came back:* It said the course wants them to be mine and asked me for numbers instead. I picked at most 1 of 10 for false positives, and I told it to pick the rest when I didn't know what the other numbers meant. Claude then drafted the wording of all five criteria from options it explained, and I had Claude Code commit them.
 - *What I changed:* Afterward Claude Code caught that my reason for criterion 5 said GPT-2 reads about 1,000 tokens, when config.py caps it at 400. We fixed that line, and it also restored the unit 8 revision rules that my replacement had removed from criteria.md. So the false positive limit is my number and the rest of the targets are Claude's drafting.
 
+Moment 3: my unit 8 improvement
+
+- *What I asked for:* I asked Claude to choose my one improvement from the attack run and criteria results.
+- *What came back:* It proposed raising the AI threshold from 0.70 to 0.78 because FP02 to FP05 sat between 0.7106 and 0.7732, predicted 46 held and 10 broke, and caught that two other constants were computed from the threshold and would have moved too.
+- *What I changed:* I had Claude Code pin them. The after run matched the prediction.
+
+I asked Claude to make the held or broke calls for the attack rows and the stand-in texts for my criteria, and I reviewed them.
+
 <!-- ═══════════════════════ UNIT 8 — THE TEST ═══════════════════════ -->
 
 ---
@@ -614,6 +622,31 @@ Mechanism: `app.py::submit` sends every refusal through `_refuse_submission`, wh
 
 I am not revising the criterion, because it was measurable. It stays as written and it stays missed.
 
+**Attacks still broken in the after run: EV01 to EV09 and PI02**
+
+| ID | Group | Model | Style | Combined | Label | Spread score | Vocabulary score | Punctuation score |
+|---|---|---|---|---|---|---|---|---|
+| EV01 | 1 | 0.1635 | 0.7567 | 0.3415 | human | 1.0000 | 0.6029 | 0.6672 |
+| EV04 | 1 | 0.6114 | 0.7908 | 0.6652 | unsure | 1.0000 | 0.6105 | 0.7619 |
+| EV02 | 2 | 0.5943 | 0.1905 | 0.4732 | unsure | 0.0000 | 0.3709 | 0.2006 |
+| EV03 | 2 | 0.6662 | 0.4157 | 0.5910 | unsure | 0.6132 | 0.4481 | 0.1859 |
+| EV06 | 2 | 0.5727 | 0.1224 | 0.4376 | unsure | 0.0000 | 0.0000 | 0.3671 |
+| EV09 | 2 | 0.7042 | 0.3497 | 0.5978 | unsure | 0.5649 | 0.4842 | 0.0000 |
+| EV07 | 3 | 0.5862 | 0.5000 | 0.5603 | unsure | not used | not used | not used |
+| EV08 | 3 | 0.2452 | 0.5000 | 0.3216 | human | not used | not used | not used |
+| EV05 | 4 | 0.3212 | 0.0803 | 0.2489 | human | 0.1495 | 0.0915 | 0.0000 |
+| PI02 | PI02 | 0.2044 | 0.4176 | 0.2684 | human | 0.1963 | 1.0000 | 0.0565 |
+
+These rows have the same scores in the before and after runs, since the threshold was the only change. The model, style and combined scores come from `results/attack_run_2026-11-07_0110_after.md`. The log doesn't store the feature scores, so I recomputed them by running `stylometry.py` on the same texts. They rebuild each logged style score. "Not used" means the text counted as too short, so `style_signal` returned 0.5 without using them.
+
+The pattern across all nine evasion rows is signal one together with the combining rule, so they share one cause. A style score more than 0.2 above the model gets capped, so by the formula the AI label at 0.78 needs a model score of at least 0.72, whatever the style score is. The highest model score in EV01 to EV09 is 0.7042, so none of them could have got the AI label even with a perfect style reading. EV10, the one that held, has a model score of 0.9792. The cap didn't change any of these ten scores, because none of them is above 0.69. Raising the threshold didn't cause these misses either, because the highest combined score is 0.6652, which was under the old line of 0.70 too. The groups below say what else went on in each row.
+
+- **Group 1, signal one: EV01 and EV04.** Signal two still read these as AI, at 0.7567 and 0.7908, with a spread score of 1.0000 on both. The model scores of 0.1635 and 0.6114 are what kept them down. At those style scores they needed about 0.79 and 0.78. EV01 was aimed at signal two, but its style score stayed high, and it got the human label at 0.3415. I can't confirm the typos or unusual words lowered the model scores, because the clean versions were never scored. I only know the scores are low.
+- **Group 2, signal two and signal one: EV02, EV03, EV06 and EV09.** Style fell to 0.1905, 0.4157, 0.1224 and 0.3497, all under the 0.56 minimum. The spread score is 0.0000 on EV02 and EV06. The punctuation score is 0.1859 on EV03 and 0.0000 on EV09. So the shape of these texts read as human. The model scores of 0.5727 to 0.7042 are also under 0.72, which makes signal one a stage too. All four got unsure. I can't confirm how far the attacks moved either score, because the clean versions were never scored.
+- **Group 3, signal two gave no reading: EV07 and EV08.** Both got the neutral 0.5 from the too-short rule in `stylometry.py`. EV07 has 97 words, but it uses semicolons where full stops would go, and `sentences()` only splits on full stops, question marks and exclamation marks, so it counts one sentence. EV08 has only 10 words. EV07's model score of 0.5862 left it at unsure. EV08's model score of 0.2452 gave it 0.3216 and the human label. I can't confirm EV08 is meaningfully AI text at that length.
+- **Group 4, both signals: EV05.** The model score is 0.3212 and the style score is 0.0803, with all three feature scores low. The signals agree and the combined score is 0.2489, so it got the human label. The row is described as a heavy human editing pass, so the system may be right about it. I marked it broke under my evasion rule, and I can't confirm how much of the text is still AI writing.
+- **PI02, signal one.** The model score is 0.2044, the style score is 0.4176 and the combined score is 0.2684, so it got the human label. The system isn't obeying the instruction, because nothing in `detector.py` or `stylometry.py` reads instructions. The low model score is what produced the label. PI01 and PI03 open with other injected instructions and scored 0.4625 and 0.5943 on the model. I can't confirm the fake system message caused the low score, because the shortened AI text was never scored without it.
+
 **Patterns**
 
 The two misses don't share a stage. Criterion 2 is in the signals, mostly signal two. Criterion 5 is in the route, and it's a conflict between my criterion and milestone 1 rather than a detection problem. Criterion 2 does connect to the attack run. In this run the style signal doesn't separate the groups well, with AI-style stand-ins at 0.6918 to 0.8225 and the three human-style misses at 0.7666 to 0.8433. FP02 to FP05 were called AI with model scores of 0.7387 to 0.8329 and style scores of 0.5778 to 0.6487. All four style scores are above 0.56, so the cap didn't apply. EV01 had a style score of 0.7567, and its model score of 0.1635 still gave it 0.3415 and the human label. So a high style score shows up on human-style text and on AI text, and the 0.7 weight leaves the model making the call both ways. I can't confirm the typos caused EV01's low model score, because I never scored the clean version in that run.
@@ -757,14 +790,23 @@ It helped with wrong accusations and hurt detection: it removed all four false a
 <!-- For each attack still getting through and each criterion still missed:
      what you'd do, and why you stopped. -->
 
-
+- **The 9 evasion rows (EV01 to EV09).** I'd score the clean versions first, so I can see what each attack actually moved. Then I'd look at the 0.72 model score the AI label now needs, using real AI and real human text, since pushing the line down brings the false accusations back. I'd also make the sentence check handle text like EV07 that swaps full stops for semicolons. I stopped because the unit allows one change, and I'd need real data to choose the next one.
+- **PI02.** I'd score the same text with and without the fake system message, to find out whether the prefix is what lowered the model score. If it is, I'd look at how the detector handles a strange opening. I stopped because that measurement isn't part of the set, and I only had one change.
+- **MF03 and MF04.** Control characters and pure punctuation get "written by a person", because their model scores are near 0. I'd have the route refuse text with too few real words, the same way it refuses empty text. They didn't crash, so they count as held under my rule, and I stopped there because I'd already used my one change.
+- **Criterion 2.** The human side stays at 2 of 5. I'd calibrate the spread and punctuation ranges in signal two against real human writing, then check the Priya reply separately, since its model score alone misses the target. I stopped because the unit allows one change and I don't have real writing to calibrate with.
+- **Criterion 5.** The log still grows by 5, because milestone 1 logs every refusal. I'd keep the logging, since rejections are evidence, and write the next version of this criterion to say no decision gets logged for bad input. I stopped because the criterion was measurable, so it stays as written and stays missed.
+- **The `creator_id` workaround.** Someone can change `creator_id` on every request and never hit the limit. I'd count requests per address as well as per `creator_id`. I stopped because this unit's one change went to false accusations.
+- **Non-string `creator_id` in the log (RQ06).** A rejected request with an object as its `creator_id` gets written to the log as sent. I'd record anything that isn't a string as `invalid`, with a length cap. I stopped because it doesn't change any result, and I'd used my one change.
+- **Appeals.** Anyone with a `content_id` can appeal, as many times as they want, and nothing notifies a reviewer, even though the label and the response say a person will look. I'd check the appeal comes from the creator and send it to a real review queue. I stopped because there's no login or reviewer in this project yet.
+- **FP04.** It sits only 0.0068 under the AI line at 0.7732, so a small change in score would make it an accusation again. I wouldn't raise the line further, since only 1 of 5 AI stand-ins still gets the AI label. I'd work on signal two instead. I stopped because that needs real writing to calibrate.
+- **Criterion 1.** It was tested on stand-in texts written by Claude Code, not my own writing, so the MET only shows how the system treats human-style text. I'd rerun it on 10 pieces I actually wrote, including at least 3 formal ones. I stopped because I chose not to supply my own writing for this run.
 
 **The trade I'd make if this ran for real:**
 
 <!-- Two sentences. Fewer wrong accusations means more AI text getting through.
      Say which way you'd go and WHO PAYS FOR IT. -->
 
-
+If this ran for real I would keep leaning toward fewer wrong accusations, because a false flag costs one writer their trust in the platform and a missed AI text costs a reader a little. The people who pay for that choice are readers and honest writers, who now compete with AI text that gets through unflagged.
 
 <!-- ═════════════════════════════════════════════════════════════════════
 

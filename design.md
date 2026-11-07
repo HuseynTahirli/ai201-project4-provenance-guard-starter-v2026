@@ -59,7 +59,7 @@ combine_signals in scoring.py merges the two scores. The numbers live in config.
 
 score_to_label then sets the guess and label from combined: 0.78 to 1.00 is "ai", 0.35 or lower is "human", and above 0.35 and below 0.78 is "unsure". The route returns combined as confidence.
 
-Signal one gets more weight because it is more robust to light edits. The AI label needs support from both signals, so it is blocked when style over-reads (signal two over-reads formal writing) or gives almost no support. A human score is left alone. The score never falls as the model score rises, and test_scoring.py checks that.
+I gave signal one more weight by choice. Nothing here measured how either signal holds up to light edits. The AI label needs support from both signals, so it is blocked when style over-reads (signal two over-reads formal writing) or gives almost no support. A human score is left alone. The score never falls as the model score rises, and test_scoring.py checks that.
 
 The numbers: the gap (DISAGREEMENT_GAP) is 0.2. The cap (DISAGREEMENT_CAP) is pinned at 0.69. The style minimum (STYLE_SUPPORT_MIN) is pinned at 0.56. Both used to be computed from the threshold when it was 0.70, as AI_THRESHOLD - 0.01 and AI_THRESHOLD - WEIGHT_MODEL * DISAGREEMENT_GAP. I pinned them so raising AI_THRESHOLD to 0.78 was the only change in unit 8.
 

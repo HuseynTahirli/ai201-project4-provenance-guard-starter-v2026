@@ -28,8 +28,8 @@ def combine_signals(model_score: float, style_score: float) -> float:
     stays in unsure: combined = min(combined, DISAGREEMENT_CAP). Round to 4
     decimals. The numbers live in config.py.
 
-    Why: signal one is more robust to light edits, so it gets more weight. The
-    AI label needs support from both signals, so it is blocked when style
+    Why: I gave signal one more weight by choice. Nothing here measured how
+    either signal holds up to light edits. The AI label needs support from both signals, so it is blocked when style
     over-reads (signal two over-reads formal writing) or gives almost no
     support. A human score is left alone. The score never falls as the model
     score rises.
