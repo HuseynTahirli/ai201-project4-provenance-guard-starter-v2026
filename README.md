@@ -167,6 +167,9 @@ The cap only changes the number when the score would otherwise pass 0.69. With a
 <!-- One submission and one appeal, pasted as text: the request, the response,
      and the log entries. -->
 
+These blocks are real output: a `POST /submit` request and response, a `POST /appeal` request and response, then the log entries for that `content_id`.
+The status of an item is read from the latest entry for its `content_id`.
+
 **A submission**
 
 <!-- The response needs content_id, guess, confidence, label, AND both
@@ -174,37 +177,68 @@ The cap only changes the number when the score would otherwise pass 0.69. With a
      two off the response, so leaving them out costs you next unit's
      diagnostics. -->
 
-```bash
-$ curl -X POST http://127.0.0.1:5000/submit \
-  -H "Content-Type: application/json" \
-  -d '{"text": "...", "creator_id": "..."}'
 ```
+Request (POST /submit):
+{
+  "text": "Remote work offers a wide range of benefits for both employees and organizations. It provides greater flexibility by allowing individuals to manage their schedules more effectively. Employees can also save valuable time and money by eliminating the daily commute. Organizations benefit from access to a broader talent pool across many different regions. Overall, remote work creates a more balanced and productive environment for everyone involved.",
+  "creator_id": "huseyn"
+}
 
-```json
-
+Response:
+{
+  "confidence": 0.7693,
+  "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+  "guess": "ai",
+  "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+  "model_score": 0.7899,
+  "style_score": 0.7211
+}
 ```
 
 **An appeal**
 
-```bash
-$ curl -X POST http://127.0.0.1:5000/appeal \
-  -H "Content-Type: application/json" \
-  -d '{"content_id": "...", "reasoning": "..."}'
 ```
+Request:
+{
+  "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+  "reasoning": "I wrote this myself for a class assignment."
+}
 
-```json
-
+Response (HTTP 200):
+{
+  "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+  "message": "Your appeal has been recorded. A person will review it.",
+  "status": "under_review"
+}
 ```
 
 **What the log shows afterwards**
 
-```bash
-$ curl "http://127.0.0.1:5000/log?limit=3"
-```
-
 ```json
-
+[
+  {
+    "combined_score": 0.7693,
+    "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+    "creator_id": "huseyn",
+    "guess": "ai",
+    "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+    "model_score": 0.7899,
+    "status": "decided",
+    "style_score": 0.7211,
+    "timestamp": "2026-11-06T07:28:00+00:00"
+  },
+  {
+    "content_id": "c1d7d5a3-34c6-4117-87a0-59b8601b6a0e",
+    "creator_id": "huseyn",
+    "event": "appeal",
+    "reasoning": "I wrote this myself for a class assignment.",
+    "status": "under_review",
+    "timestamp": "2026-11-06T07:33:11+00:00"
+  }
+]
 ```
+
+Later entries for this `content_id` are repeat appeals I ran while testing.
 
 ---
 
