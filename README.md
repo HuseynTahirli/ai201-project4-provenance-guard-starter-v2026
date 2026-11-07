@@ -647,6 +647,29 @@ The pattern across all nine evasion rows is signal one together with the combini
 - **Group 4, both signals: EV05.** The model score is 0.3212 and the style score is 0.0803, with all three feature scores low. The signals agree and the combined score is 0.2489, so it got the human label. The row is described as a heavy human editing pass, so the system may be right about it. I marked it broke under my evasion rule, and I can't confirm how much of the text is still AI writing.
 - **PI02, signal one.** The model score is 0.2044, the style score is 0.4176 and the combined score is 0.2684, so it got the human label. The system isn't obeying the instruction, because nothing in `detector.py` or `stylometry.py` reads instructions. The low model score is what produced the label. PI01 and PI03 open with other injected instructions and scored 0.4625 and 0.5943 on the model. I can't confirm the fake system message caused the low score, because the shortened AI text was never scored without it.
 
+**Attacks broken in the before run and held in the after run: FP02 to FP05**
+
+| ID | Model | Style | Combined | Before label | After label | Model adds | Style adds | Spread score | Vocabulary score | Punctuation score |
+|---|---|---|---|---|---|---|---|---|---|---|
+| FP02 | 0.7387 | 0.6452 | 0.7106 | ai | unsure | 0.5171 | 0.1936 | 1.0000 | 0.0000 | 0.9356 |
+| FP03 | 0.8051 | 0.5778 | 0.7369 | ai | unsure | 0.5636 | 0.1733 | 0.8436 | 0.0000 | 0.8899 |
+| FP04 | 0.8329 | 0.6340 | 0.7732 | ai | unsure | 0.5830 | 0.1902 | 0.7666 | 0.2941 | 0.8412 |
+| FP05 | 0.8005 | 0.6487 | 0.7550 | ai | unsure | 0.5603 | 0.1946 | 0.9462 | 0.0000 | 1.0000 |
+
+These four share one cause, so I'm treating them as a group. They were called AI at the old line of 0.70. They're held now only because the threshold moved to 0.78. All four scores are the same in both runs, so the system still reads them the same way. The margins under the new line are 0.0694, 0.0431, 0.0068 and 0.0250. As with the rows above, I recomputed the feature scores with `stylometry.py`, and they rebuild each logged style score.
+
+Stage: mostly signal one, and the combining rule's heavy 0.7 weight on it.
+
+Mechanism: signal one alone puts these texts high, with model scores of 0.7387 to 0.8329. Every one of those is above the old line by itself. Signal one also contributed more to each combined score. It adds 0.5171 to 0.5830 after the 0.7 weight, and style adds 0.1733 to 0.1946.
+
+The cap didn't stop them in the before run, for two reasons. The style scores of 0.5778 to 0.6487 are all at or above the 0.56 minimum, so the style minimum didn't apply. Style is below the model on all four, so style wasn't more than 0.2 above it, and the gap rule didn't apply either. FP03 was the closest, only 0.0178 above the minimum.
+
+Signal two still mattered. The model part alone doesn't reach 0.70, so style had to add the rest. By the formula they needed style scores of at least 0.6097, 0.4548, 0.3899 and 0.4655, and each one had more than that. Their spread scores of 0.7666 to 1.0000 and punctuation scores of 0.8412 to 1.0000 are what kept style up. Vocabulary added little, at 0.0000 on three of them and 0.2941 on FP04.
+
+The weight isn't the whole story either. By the formula, equal weights would give about 0.69, 0.69, 0.73 and 0.72. That moves FP02 and FP03 under 0.70, but FP04 and FP05 would still be called AI.
+
+What I can't confirm: why the model found these texts so predictable, since the log only stores the score. `detector.py` says common words in ordinary sentences score this way, but I didn't measure that on these rows. I also can't confirm these are real human writing, since the attack set only describes them that way. The equal weight and "needed" numbers are arithmetic from the formula, not from a run.
+
 **Patterns**
 
 The two misses don't share a stage. Criterion 2 is in the signals, mostly signal two. Criterion 5 is in the route, and it's a conflict between my criterion and milestone 1 rather than a detection problem. Criterion 2 does connect to the attack run. In this run the style signal doesn't separate the groups well, with AI-style stand-ins at 0.6918 to 0.8225 and the three human-style misses at 0.7666 to 0.8433. FP02 to FP05 were called AI with model scores of 0.7387 to 0.8329 and style scores of 0.5778 to 0.6487. All four style scores are above 0.56, so the cap didn't apply. EV01 had a style score of 0.7567, and its model score of 0.1635 still gave it 0.3415 and the human label. So a high style score shows up on human-style text and on AI text, and the 0.7 weight leaves the model making the call both ways. I can't confirm the typos caused EV01's low model score, because I never scored the clean version in that run.
@@ -832,7 +855,7 @@ If this ran for real I would keep leaning toward fewer wrong accusations, becaus
        [x] The attack set run IN FULL, every input with an outcome
        [x] Ten audit log entries pasted as text
        [x] Five criteria across three trials
-       [ ] A diagnosis for every miss and every broken attack — stage AND mechanism
+       [x] A diagnosis for every miss and every broken attack — stage AND mechanism
        [x] One improvement, with Attack Run — After
        [x] What's Still Broken, including the production trade
        [x] At least four new commits
