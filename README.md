@@ -158,7 +158,7 @@ The cap only changes the number when the score would otherwise pass 0.69. With a
      sounding like an accusation, because the person reading it may well have
      written every word themselves. -->
 
-Most people who see this label are real writers, so I wanted it to say that nothing is wrong first. I left out the words score, threshold and confidence because nobody outside the system knows what they mean. It says "nothing has been flagged" so the writer doesn't read unsure as a soft accusation. It also doesn't offer an appeal, since there's nothing to appeal.
+Most people who see this label are real writers, so I wanted it to say that nothing is wrong. I left out the words score, threshold and confidence because nobody outside the system knows what they mean. It says "nothing has been flagged" so the writer doesn't read unsure as a soft accusation. It also doesn't mention an appeal, since nothing has been flagged.
 
 
 
