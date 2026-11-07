@@ -156,8 +156,19 @@ def health():
 
 # ── YOU BUILD THIS ────────────────────────────────────────────────────────────
 
+def _refuse_submission(payload, reason: str, message: str):
+    """Log a refused submission the same way the 429 handler does, then answer 400."""
+    if not isinstance(payload, dict):
+        payload = {}
+    audit.log_rejection(
+        creator_id=payload.get("creator_id", "unknown"),
+        reason=reason,
+    )
+    return jsonify({"error": message}), 400
+
+
 @app.post("/submit")
-# @limiter.limit(f"{config.RATE_LIMIT_PER_MINUTE}/minute;{config.RATE_LIMIT_PER_DAY}/day")
+@limiter.limit(f"{config.RATE_LIMIT_PER_MINUTE}/minute;{config.RATE_LIMIT_PER_DAY}/day")
 def submit():
     """
     Take a piece of text, decide about it, log the decision, answer.
@@ -207,23 +218,23 @@ def submit():
     """
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict):
-        return jsonify({"error": "Request body must be a JSON object."}), 400
+        return _refuse_submission(payload, "body_not_json_object", "Request body must be a JSON object.")
 
     text = payload.get("text")
     if not isinstance(text, str) or not text.strip():
-        return jsonify({"error": "text is required and must be a non-empty string."}), 400
+        return _refuse_submission(payload, "missing_or_empty_text", "text is required and must be a non-empty string.")
     if len(text) > MAX_TEXT_CHARS:
-        return jsonify({"error": f"text must be {MAX_TEXT_CHARS} characters or fewer."}), 400
+        return _refuse_submission(payload, "text_too_long", f"text must be {MAX_TEXT_CHARS} characters or fewer.")
 
     creator_id = payload.get("creator_id")
     if not isinstance(creator_id, str) or not creator_id.strip():
-        return jsonify({"error": "creator_id is required and must be a non-empty string."}), 400
+        return _refuse_submission(payload, "missing_or_empty_creator_id", "creator_id is required and must be a non-empty string.")
 
     # detector.py loads the model on the first call and reuses it after that.
     try:
         model_score = detector.model_signal(text)
     except ValueError as exc:  # text under 3 tokens is too short to score
-        return jsonify({"error": str(exc)}), 400
+        return _refuse_submission(payload, "text_too_short", str(exc))
 
     style_score = stylometry.style_signal(text)
     combined_score = scoring.combine_signals(model_score, style_score)
