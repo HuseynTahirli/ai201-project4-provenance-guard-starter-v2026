@@ -57,7 +57,7 @@ combine_signals in scoring.py merges the two scores. The numbers live in config.
 2. If combined is above 0.5, and either style_score - model_score (rounded to 4 decimals) is greater than 0.2 or style_score is below 0.56, cap the score just under the AI threshold: combined = min(combined, 0.69). If combined is 0.5 or below, leave it alone.
 3. Round to 4 decimals.
 
-score_to_label then sets the guess and label from combined: 0.70 or higher is "ai", 0.35 or lower is "human", and anything between is "unsure". The route returns combined as confidence.
+score_to_label then sets the guess and label from combined: 0.78 to 1.00 is "ai", 0.35 or lower is "human", and above 0.35 and below 0.78 is "unsure". The route returns combined as confidence.
 
 Signal one gets more weight because it is more robust to light edits. The AI label needs support from both signals, so it is blocked when style over-reads (signal two over-reads formal writing) or gives almost no support. A human score is left alone. The score never falls as the model score rises, and test_scoring.py checks that.
 

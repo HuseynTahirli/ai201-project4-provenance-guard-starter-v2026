@@ -107,15 +107,16 @@ SCORE_DECIMALS = 4
 # that decide who pays for it.
 
 HUMAN_THRESHOLD = 0.35
-AI_THRESHOLD = 0.70
+AI_THRESHOLD = 0.78
 
-# A blocked score can't go above this, which stays just under the AI line.
-DISAGREEMENT_CAP = AI_THRESHOLD - 0.01
+# These two are pinned to the values they had when AI_THRESHOLD was 0.70, so the
+# threshold is the only change in unit 8.
+#
+# A blocked score can't go above this.
+DISAGREEMENT_CAP = 0.69
 
-# A style score below this gives too little support for an AI call. It's where
-# the score at the disagreement gap (style + WEIGHT_MODEL * gap) reaches the AI
-# line. Rounded so float noise can't move the boundary off 0.56.
-STYLE_SUPPORT_MIN = round(AI_THRESHOLD - WEIGHT_MODEL * DISAGREEMENT_GAP, SCORE_DECIMALS)
+# A style score below this gives too little support for an AI call.
+STYLE_SUPPORT_MIN = 0.56
 
 # `scoring.label_ranges()` prints the bands; the reachable range is a different
 # question.

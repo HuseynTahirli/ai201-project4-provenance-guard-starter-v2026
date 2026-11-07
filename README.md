@@ -150,8 +150,8 @@ The cap only changes the number when the score would otherwise pass 0.69. With a
 | Label | Score range | The exact text a reader sees |
 |---|---|---|
 | high-confidence human | 0.00 to 0.35, including 0.35 | Our checks suggest this was written by a person. |
-| unsure | above 0.35 and below 0.70 | We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged. |
-| high-confidence AI | 0.70 to 1.00, including 0.70 | Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look. |
+| unsure | above 0.35 and below 0.78 | We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged. |
+| high-confidence AI | 0.78 to 1.00, including 0.78 | Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look. |
 
 **Why I worded the "unsure" one this way:**
 <!-- It's the hardest of the three. It has to admit uncertainty without
