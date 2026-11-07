@@ -439,11 +439,21 @@ FP03 is careful non-native English, and my system called it AI. It got a model s
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
 |---|---|---|---|---|---|
-| 1.  |  |  |  |  |  |
-| 2.  |  |  |  |  |  |
-| 3.  |  |  |  |  |  |
-| 4.  |  |  |  |  |  |
-| 5.  |  |  |  |  |  |
+| 1. False positives | At most 1 of 10 stand-ins labelled AI | 0 of 10 labelled AI | 0 of 10 labelled AI | 0 of 10 labelled AI | MET |
+| 2. Score spread | At least 4 of 5 AI at 0.7 or higher, at least 4 of 5 human at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower | MISSED |
+| 3. Label coverage | All three labels appear in 10 texts | 3 of 3 labels seen | 3 of 3 labels seen | 3 of 3 labels seen | MET |
+| 4. Appeal path | 10 of 10 appeals under_review and in GET /log, unknown id returns 404 | 10 of 10 appeals, unknown id 404 | 10 of 10 appeals, unknown id 404 | 10 of 10 appeals, unknown id 404 | MET |
+| 5. Bad input | 5 of 5 return 400 with an error message, log does not grow | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) | MISSED |
+
+**How I decided each verdict**
+
+I compared each run's count to the target, and a target had to hold in all three runs. The three trials came out the same for all five criteria. In criteria 4 and 5 the only differences between trials were new content IDs, trial-numbered creator IDs and timestamps.
+
+- Criterion 1 is MET because 0 of 10 stand-ins got the AI label in every run, and the limit is 1.
+- Criterion 2 is MISSED because the human side reached only 2 of 5 in every run and I need 4. The AI side passed at 5 of 5.
+- Criterion 3 is MET because all three labels appeared in every run.
+- Criterion 4 is MET because 10 of 10 appeals reached under_review and showed in `GET /log` in every run, and the unknown ID returned 404 every time.
+- Criterion 5 is MISSED because the log grew by 5 in every run, and my criterion says nothing is written. The 400s themselves passed at 5 of 5.
 
 **Stand-in texts**
 
@@ -452,8 +462,105 @@ The texts in `scenarios.py` are stand-ins written by Claude Code, not my own wri
 **Real output from one trial**, pasted as text, naming the file and function
 that produced it:
 
-```json
+All of this is trial 1. It's the real output with the values unchanged. I only put each object on one line to keep it short. The full files are `results/run_2026-11-07_0100_before.md` and `results/checks_2026-11-07_0101_before.md`.
 
+Criterion 1. Sent by `run_eval.py::main`, written by `run_eval.py::write_report`, counted by `scenarios.py::count_false_positives`.
+
+```
+| 1 | At most 1 of 10 stand-ins labelled AI | 0 of 10 labelled AI | 0 of 10 labelled AI | 0 of 10 labelled AI |  |
+```
+
+```json
+{"status": 200, "guess": "unsure", "confidence": 0.5371, "model_score": 0.6261, "style_score": 0.3293, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Hello Ms. Okafor, I am writing to ask whether I could hand in the chem"}
+{"status": 200, "guess": "unsure", "confidence": 0.4887, "model_score": 0.3757, "style_score": 0.7523, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "I am applying for the weekend shift supervisor position at the Riversi"}
+{"status": 200, "guess": "unsure", "confidence": 0.5951, "model_score": 0.5529, "style_score": 0.6936, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "The survey was sent to 212 households on the east side of the district"}
+{"status": 200, "guess": "human", "confidence": 0.28, "model_score": 0.1861, "style_score": 0.499, "label": "Our checks suggest this was written by a person.", "sent": "hey are you still coming saturday? mum wants to know how many chairs t"}
+{"status": 200, "guess": "human", "confidence": 0.2668, "model_score": 0.2421, "style_score": 0.3245, "label": "Our checks suggest this was written by a person.", "sent": "ugh the 42 didnt show up again so im gonna be like 20 min late. save m"}
+{"status": 200, "guess": "human", "confidence": 0.3335, "model_score": 0.1448, "style_score": 0.7738, "label": "Our checks suggest this was written by a person.", "sent": "Just got out of the dentist, my whole face is numb lol. Can you cover "}
+{"status": 200, "guess": "unsure", "confidence": 0.4259, "model_score": 0.247, "style_score": 0.8433, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Has anyone else had the dishwasher error E24 on a Bosch model from abo"}
+{"status": 200, "guess": "unsure", "confidence": 0.3538, "model_score": 0.2393, "style_score": 0.621, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Finally beat the second boss after about thirty tries. What worked for"}
+{"status": 200, "guess": "unsure", "confidence": 0.5649, "model_score": 0.4784, "style_score": 0.7666, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "I agree with Priya about the ending but I read the letter differently."}
+{"status": 200, "guess": "unsure", "confidence": 0.6364, "model_score": 0.5627, "style_score": 0.8084, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Good point about the sample size in that study, I hadnt thought about "}
+```
+
+Criterion 2. Sent by `run_eval.py::main`, written by `run_eval.py::write_report`, counted by `scenarios.py::count_score_spread`. The first 5 are the AI-style stand-ins and the last 5 are the human-style ones.
+
+```
+| 2 | At least 4 of 5 AI at 0.7 or higher, at least 4 of 5 human at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower | AI 5 of 5 at 0.7 or higher, human 2 of 5 at 0.3 or lower |  |
+```
+
+```json
+{"status": 200, "guess": "ai", "confidence": 0.8117, "model_score": 0.8608, "style_score": 0.6971, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Regular exercise offers a wide range of benefits for both physical and"}
+{"status": 200, "guess": "ai", "confidence": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Reading is one of the most effective ways to expand knowledge and impr"}
+{"status": 200, "guess": "ai", "confidence": 0.7102, "model_score": 0.6862, "style_score": 0.7661, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Effective time management is an essential skill for achieving both per"}
+{"status": 200, "guess": "ai", "confidence": 0.7167, "model_score": 0.6714, "style_score": 0.8225, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Sustainable living plays an important role in protecting the environme"}
+{"status": 200, "guess": "ai", "confidence": 0.7563, "model_score": 0.7343, "style_score": 0.8076, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Online learning has transformed the way that students access education"}
+{"status": 200, "guess": "human", "confidence": 0.28, "model_score": 0.1861, "style_score": 0.499, "label": "Our checks suggest this was written by a person.", "sent": "hey are you still coming saturday? mum wants to know how many chairs t"}
+{"status": 200, "guess": "human", "confidence": 0.2668, "model_score": 0.2421, "style_score": 0.3245, "label": "Our checks suggest this was written by a person.", "sent": "ugh the 42 didnt show up again so im gonna be like 20 min late. save m"}
+{"status": 200, "guess": "human", "confidence": 0.3335, "model_score": 0.1448, "style_score": 0.7738, "label": "Our checks suggest this was written by a person.", "sent": "Just got out of the dentist, my whole face is numb lol. Can you cover "}
+{"status": 200, "guess": "unsure", "confidence": 0.4259, "model_score": 0.247, "style_score": 0.8433, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Has anyone else had the dishwasher error E24 on a Bosch model from abo"}
+{"status": 200, "guess": "unsure", "confidence": 0.5649, "model_score": 0.4784, "style_score": 0.7666, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "I agree with Priya about the ending but I read the letter differently."}
+```
+
+Criterion 3. Sent by `run_eval.py::main`, written by `run_eval.py::write_report`, counted by `scenarios.py::count_coverage`.
+
+```
+| 3 | All three labels appear in 10 texts | 3 of 3 labels seen | 3 of 3 labels seen | 3 of 3 labels seen |  |
+```
+
+```json
+{"status": 200, "guess": "ai", "confidence": 0.8117, "model_score": 0.8608, "style_score": 0.6971, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Regular exercise offers a wide range of benefits for both physical and"}
+{"status": 200, "guess": "ai", "confidence": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Reading is one of the most effective ways to expand knowledge and impr"}
+{"status": 200, "guess": "ai", "confidence": 0.7102, "model_score": 0.6862, "style_score": 0.7661, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Effective time management is an essential skill for achieving both per"}
+{"status": 200, "guess": "unsure", "confidence": 0.5951, "model_score": 0.5529, "style_score": 0.6936, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "The survey was sent to 212 households on the east side of the district"}
+{"status": 200, "guess": "human", "confidence": 0.28, "model_score": 0.1861, "style_score": 0.499, "label": "Our checks suggest this was written by a person.", "sent": "hey are you still coming saturday? mum wants to know how many chairs t"}
+{"status": 200, "guess": "human", "confidence": 0.2668, "model_score": 0.2421, "style_score": 0.3245, "label": "Our checks suggest this was written by a person.", "sent": "ugh the 42 didnt show up again so im gonna be like 20 min late. save m"}
+{"status": 200, "guess": "unsure", "confidence": 0.3538, "model_score": 0.2393, "style_score": 0.621, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Finally beat the second boss after about thirty tries. What worked for"}
+{"status": 200, "guess": "unsure", "confidence": 0.6364, "model_score": 0.5627, "style_score": 0.8084, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "Good point about the sample size in that study, I hadnt thought about "}
+{"status": 200, "guess": "ai", "confidence": 0.8187, "model_score": 0.7864, "style_score": 0.894, "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.", "sent": "Working from a coffee shop has a lot of benefits, at least in my exper"}
+{"status": 200, "guess": "unsure", "confidence": 0.6442, "model_score": 0.5773, "style_score": 0.8003, "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.", "sent": "The library will close at 6pm on weekdays during the summer. Books can"}
+```
+
+Criterion 4. Produced by `scenarios.py::check_appeals`, written by `scenarios.py::main`. `run_eval.py` can't send appeals, so this one isn't in its report.
+
+```
+| 4 | 10 of 10 appeals under_review and in GET /log, unknown id returns 404 | 10 of 10 appeals, unknown id 404 | 10 of 10 appeals, unknown id 404 | 10 of 10 appeals, unknown id 404 |  |
+```
+
+```json
+{"count": "10 of 10 appeals, unknown id 404", "unknown_status": 404, "log_growth_from_unknown": 0}
+{"creator_id": "eval_c4_t1_01", "content_id": "e6f97402-222c-4bee-a00f-b676c90c5df8", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_02", "content_id": "5669207b-9e3c-4b2b-9f42-b9031ccf8c3a", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_03", "content_id": "9812ee13-db2c-494b-88bd-cf199766ca15", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_04", "content_id": "43ca581d-12a4-4435-ac70-930edd88cefb", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_05", "content_id": "444f2841-61d2-4436-a461-f796890d971f", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_06", "content_id": "c7e6a788-77a0-4969-8ffb-d7438f58da03", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_07", "content_id": "1d33ab77-c911-4490-acf1-e6c06e7b9edd", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_08", "content_id": "bb43936b-8572-470a-ac3b-87a34364a58a", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_09", "content_id": "2e3ebdd8-2692-4896-9a1d-1fce2e9d9b24", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+{"creator_id": "eval_c4_t1_10", "content_id": "4210fede-ca36-4072-b02a-fdd7c72d1154", "submit_status": 200, "appeal_status": 200, "appeal_reported": "under_review", "log_statuses": ["decided", "under_review"], "passed": true}
+```
+
+Criterion 5. The log check is produced by `scenarios.py::check_bad_input` and written by `scenarios.py::main`. `run_eval.py::main` also sent the same requests, and its report shows the same 400s. The first block is the 5 responses, and the second is the 5 entries the log gained.
+
+```
+| 5 | 5 of 5 return 400 with an error message, log does not grow | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) | 5 of 5 returned 400, log grew by 5 (5 rejections, 0 other) |  |
+```
+
+```json
+{"creator_id": "eval_c5_01", "status": 400, "error": "text is required and must be a non-empty string."}
+{"creator_id": "eval_c5_02", "status": 400, "error": "text is required and must be a non-empty string."}
+{"creator_id": "eval_c5_03", "status": 400, "error": "text is required and must be a non-empty string."}
+{"creator_id": "eval_c5_04", "status": 400, "error": "text must be 5000 characters or fewer."}
+{"creator_id": "eval_c5_05", "status": 400, "error": "text is required and must be a non-empty string."}
+```
+
+```json
+{"creator_id": "eval_c5_01", "event": "rejected", "reason": "missing_or_empty_text", "status": "rejected", "timestamp": "2026-11-07T07:01:27+00:00"}
+{"creator_id": "eval_c5_02", "event": "rejected", "reason": "missing_or_empty_text", "status": "rejected", "timestamp": "2026-11-07T07:01:27+00:00"}
+{"creator_id": "eval_c5_03", "event": "rejected", "reason": "missing_or_empty_text", "status": "rejected", "timestamp": "2026-11-07T07:01:27+00:00"}
+{"creator_id": "eval_c5_04", "event": "rejected", "reason": "text_too_long", "status": "rejected", "timestamp": "2026-11-07T07:01:27+00:00"}
+{"creator_id": "eval_c5_05", "event": "rejected", "reason": "missing_or_empty_text", "status": "rejected", "timestamp": "2026-11-07T07:01:27+00:00"}
 ```
 
 **Diagnoses**
@@ -472,7 +579,45 @@ that produced it:
 
      Look for a pattern. Five failures on one signal is one problem, not five. -->
 
+**Criterion 2: human side reached 2 of 5, target 4**
 
+| Text | Model | Style | Spread score | Vocabulary score | Punctuation score | Combined | Label |
+|---|---|---|---|---|---|---|---|
+| Saturday chairs message | 0.1861 | 0.4990 | 0.4232 | 0.7065 | 0.3671 | 0.2800 | human |
+| Late bus message | 0.2421 | 0.3245 | 0.3744 | 0.5357 | 0.0635 | 0.2668 | human |
+| Dentist message | 0.1448 | 0.7738 | 0.8942 | 0.4500 | 0.9771 | 0.3335 | human |
+| Dishwasher forum post | 0.2470 | 0.8433 | 1.0000 | 0.6703 | 0.8595 | 0.4259 | unsure |
+| Priya discussion reply | 0.4784 | 0.7666 | 1.0000 | 0.3571 | 0.9426 | 0.5649 | unsure |
+
+The model, style, combined and label values come from the run log. The run log doesn't store the three feature scores, so I worked them out by running the functions in `stylometry.py` on the same texts. They rebuild the logged style score for all five.
+
+Stage: mostly signal two, and signal one for one text.
+
+Mechanism: the two texts that passed have style scores of 0.4990 and 0.3245. The three that missed have 0.7738, 0.8433 and 0.7666. Spread and punctuation are what separate them. The three that missed score 0.8942 to 1.0000 on spread and 0.8595 to 0.9771 on punctuation. The two that passed score 0.4232 and 0.3744 on spread, and 0.3671 and 0.0635 on punctuation. Vocabulary doesn't separate them, since the misses score 0.3571 to 0.6703 and the passes score 0.5357 and 0.7065. At a weight of 0.3, a style score of 0.8433 adds 0.2530 before the model counts at all.
+
+- Dentist message: its model score is low at 0.1448, and style lifts the total to 0.3335. By the formula, a style score of 0.5 would have given 0.2514. It still got the human label, because that label goes up to 0.35 and my target is 0.3.
+- Dishwasher post: the model adds 0.1729, so by the formula it needed a style score of 0.4237 or lower to reach 0.3. It got 0.8433.
+- Priya reply: this one isn't only signal two. The model score of 0.4784 adds 0.3349 by itself, so it would miss 0.3 even with a style score of 0. That makes signal one a stage here too.
+
+The combining rule's cap didn't change any of the five, since all of them are under 0.69. So only the weights acted on these scores. The label mapping isn't the cause either, because this target reads the score and not the label.
+
+What I can't confirm from this data: whether the style ranges are wrong for real human writing, because these texts are stand-ins written by Claude Code. I also can't say why the model scored the Priya reply at 0.4784. The score only tells me how predictable GPT-2 found it. The "would have" and "needed" numbers above are worked out from the formula, not from a run.
+
+**Criterion 5: log grew by 5, target no growth**
+
+Stage: the route, in `app.py`.
+
+Mechanism: `app.py::submit` sends every refusal through `_refuse_submission`, which calls `audit.log_rejection`. Milestone 1 required logging every refusal that way, which contradicts my criterion's "nothing is written to the log" clause. The 5 new entries in each trial are all rejections with no decisions, so no bad input reached the signals. The 400s and error messages work at 5 of 5.
+
+I am not revising the criterion, because it was measurable. It stays as written and it stays missed.
+
+**Patterns**
+
+The two misses don't share a stage. Criterion 2 is in the signals, mostly signal two. Criterion 5 is in the route, and it's a conflict between my criterion and milestone 1 rather than a detection problem. Criterion 2 does connect to the attack run. In this run the style signal doesn't separate the groups well, with AI-style stand-ins at 0.6918 to 0.8225 and the three human-style misses at 0.7666 to 0.8433. FP02 to FP05 were called AI with model scores of 0.7387 to 0.8329 and style scores of 0.5778 to 0.6487. All four style scores are above 0.56, so the cap didn't apply. EV01 had a style score of 0.7567, and its model score of 0.1635 still gave it 0.3415 and the human label. So a high style score shows up on human-style text and on AI text, and the 0.7 weight leaves the model making the call both ways. I can't confirm the typos caused EV01's low model score, because I never scored the clean version in that run.
+
+**Criterion 1 is weaker than it looks**
+
+The MET on criterion 1 rests on stand-in texts written by Claude Code, not on my own writing. The attack set's false positive rows suggest the real picture is worse. 4 of those 8 rows were called AI. The highest model score among my 10 stand-ins was 0.6261, and FP02 to FP05 scored 0.7387 to 0.8329. Those rows aren't my writing either and they're a different set, so they don't change the verdict. But I wouldn't read this MET as saying real writers are safe.
 
 ---
 
