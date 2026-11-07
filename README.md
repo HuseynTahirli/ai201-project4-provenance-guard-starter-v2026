@@ -244,17 +244,13 @@ Later entries for this `content_id` are repeat appeals I ran while testing.
 
 ## How I Used AI
 
-**Moment 1**
+Moment 1: the combining rule
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+After I had both signals working, I asked Claude how to combine them. I gave it a table of four texts (casual human, formal human, clearly AI, lightly edited AI) with both scores. It suggested weighting the model signal 0.7 and the style signal 0.3, plus a rule that if the signals disagree by more than 0.2 the score gets pulled halfway toward 0.5. I said yes and Claude Code built it. Then Claude Code's own checks showed the pull also dragged low human scores up, so a casual human text could never reach the 0.3 target in my criterion 2. I had it change the pull to only apply above 0.5. A second sweep showed that a higher model score could still drop a text from the AI label to unsure. Claude's first fix, a cap, failed the same test. What I kept is the version where the AI label needs support from both signals: it gets blocked when style is more than 0.2 above the model, or when style is below 0.56. I did not come up with the numbers myself. I picked the rule shape and approved the final version after seeing the sweep.
 
-**Moment 2**
+Moment 2: my criteria
 
-- *What I asked for:*
-- *What came back:*
-- *What I changed:*
+I asked Claude to write my acceptance criteria. It said the course wants them to be mine and asked me for numbers instead. I picked at most 1 of 10 for false positives, and I told it to pick the rest when I didn't know what the other numbers meant. Claude then drafted the wording of all five criteria from options it explained, and I had Claude Code commit them. Afterward Claude Code caught that my reason for criterion 5 said GPT-2 reads about 1,000 tokens, when config.py caps it at 400. We fixed that line, and it also restored the unit 8 revision rules that my replacement had removed from criteria.md. So the false positive limit is my number and the rest of the targets are Claude's drafting.
 
 <!-- ═══════════════════════ UNIT 8 — THE TEST ═══════════════════════ -->
 
