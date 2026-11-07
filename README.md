@@ -42,7 +42,7 @@
 This is a small web service. A writing site sends it text, and it sends back a label a reader can understand. Here's the path one submission takes:
 
 1. A site sends `POST /submit` with `text` and `creator_id`. `app.py::submit` receives it.
-2. Input check. The route returns a 400 with a plain error if the body isn't a JSON object, if `text` is missing, empty or over 5,000 characters, or if `creator_id` is missing or empty. Nothing gets logged for a 400.
+2. Input check. The route returns a 400 with a plain error if the body isn't a JSON object, if `text` is missing, empty or over 5,000 characters, or if `creator_id` is missing or empty. Each 400 from `/submit` also logs a rejection entry with a reason, through `audit.py::log_rejection`.
 3. Signal one. `detector.py::model_signal` runs GPT-2 on my machine and returns a score from 0 to 1. Higher means more likely AI. Text under 3 tokens can't be scored, so it also gets a 400.
 4. Signal two. `stylometry.py::style_signal` measures the shape of the text and returns a second score from 0 to 1. Higher means more likely AI.
 5. `scoring.py::combine_signals` merges the two scores into one, using the rule further down.
@@ -264,7 +264,7 @@ Moment 2: my criteria
 
 ## Rate Limiting
 
-**My limits:** ___ per minute, ___ per day
+**My limits:** 10 per minute, 100 per day, on `/submit`
 
 **Why those numbers and not others:**
 <!-- Think about two people: a real writer submitting their own work a few
@@ -272,16 +272,36 @@ Moment 2: my criteria
      thresholds. Your numbers have to be liveable for the first and hostile to
      the second. -->
 
+A real writer submits a few pieces an hour at most, so 10 a minute is generous. A script mapping my thresholds with hundreds of variations would hit it fast. 100 a day stops a slow drip over time. I didn't go lower because I need room to run my own tests.
+
 **What a caller counts as:** <!-- per address, or per creator_id? They fail
 differently — one script can look like a thousand callers, and one household
 can look like one. -->
+
+Mostly per `creator_id`. `rate_limit_key` in `app.py` uses the request's `creator_id` when it's a non-empty string. Otherwise it falls back to the caller's address with `get_remote_address`. That covers a body that isn't a JSON object and a missing or empty `creator_id`.
+
+This has two weaknesses. Someone can change `creator_id` on every request and never hit the limit. Rejected 400s also count toward the limit, because the limiter runs before the route. Ten bad requests use up a caller's minute.
 
 **The run of status codes when I pushed past it:**
 
 <!-- python run_attacks.py --flood 15 -->
 
 ```
+200 200 200 200 200 200 200 200 200 200 429 429 429 429 429
+5 of 15 were rate limited.
+```
 
+Two rejection entries from `logs/audit.jsonl`:
+
+```json
+{"timestamp": "2026-11-07T06:39:28+00:00", "creator_id": "flood_tester", "event": "rejected", "status": "rejected", "reason": "rate_limited", "limit": "10 per 1 minute"}
+{"timestamp": "2026-11-07T06:39:28+00:00", "creator_id": "flood_tester", "event": "rejected", "status": "rejected", "reason": "rate_limited", "limit": "10 per 1 minute"}
+```
+
+One decision entry from the same flood:
+
+```json
+{"timestamp": "2026-11-07T06:39:27+00:00", "content_id": "2343e813-b15e-4972-b168-0a612dc72b8f", "creator_id": "flood_tester", "guess": "human", "model_score": 0.2587, "style_score": 0.5045, "combined_score": 0.3324, "label": "Our checks suggest this was written by a person.", "status": "decided"}
 ```
 
 ---

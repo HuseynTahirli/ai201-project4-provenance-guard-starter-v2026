@@ -3,7 +3,7 @@
 ## 1. Path of a submission
 
 1. A writing site sends POST /submit with text and creator_id. app.py receives it. Nothing is added yet.
-2. Input check. The route rejects missing, empty, or oversized text with a 400 and a plain error. After this step everything downstream can trust its input.
+2. Input check. The route rejects missing, empty, or oversized text with a 400 and a plain error, and logs a rejection entry with a reason. After this step everything downstream can trust its input.
 3. Signal one, detector.py. A local GPT-2 model reads the text and returns model_signal from 0 to 1. Higher means more likely AI.
 4. Signal two, stylometry.py. It measures the text as text: sentence length spread, unique word ratio, punctuation density. It returns a second 0 to 1 score.
 5. combine_signals in scoring.py merges the two scores using the weights in config.py. This gives one confidence score.
