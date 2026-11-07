@@ -24,9 +24,9 @@ def combine_signals(model_score: float, style_score: float) -> float:
 
     Rule: combined = 0.7 * model_score + 0.3 * style_score. If combined is above
     0.5, and either style_score is more than 0.2 above model_score or style_score
-    is below 0.56, cap it just under the AI threshold:
-    combined = min(combined, DISAGREEMENT_CAP). Round to 4 decimals. The numbers
-    live in config.py.
+    is below 0.56, cap it well under the AI threshold, so a disagreeing text
+    stays in unsure: combined = min(combined, DISAGREEMENT_CAP). Round to 4
+    decimals. The numbers live in config.py.
 
     Why: signal one is more robust to light edits, so it gets more weight. The
     AI label needs support from both signals, so it is blocked when style
