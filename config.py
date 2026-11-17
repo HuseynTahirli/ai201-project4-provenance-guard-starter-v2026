@@ -145,6 +145,14 @@ RATE_LIMIT_PER_DAY = 100
 RATE_LIMIT_STORAGE = "memory://"
 
 
+# ─── Fault injection (capstone testing) ──────────────────────────────────────
+# Off by default. With PG_FAULT_INJECT=1 set when the server starts, a /submit
+# that sends the header X-PG-Fault: 500 raises an error, so the 500 path can be
+# tested on a live server. Without both, nothing changes.
+
+FAULT_INJECTION = os.getenv("PG_FAULT_INJECT", "0") == "1"
+
+
 # ─── Paths ───────────────────────────────────────────────────────────────────
 
 LOG_DIR = ROOT / "logs"

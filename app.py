@@ -286,6 +286,11 @@ def submit():
     what should this do when `text` is missing, empty, or enormous? A crash on
     a malformed input is one of the most common real failures there is.
     """
+    # Testing only. Off unless the server was started with PG_FAULT_INJECT=1,
+    # and even then only for a request that sends the header X-PG-Fault: 500.
+    if config.FAULT_INJECTION and request.headers.get("X-PG-Fault") == "500":
+        raise RuntimeError("fault injection: forced 500 for testing")
+
     payload = request.get_json(silent=True)
     if not isinstance(payload, dict):
         return _refuse_submission(payload, "body_not_json_object", "Request body must be a JSON object.")
