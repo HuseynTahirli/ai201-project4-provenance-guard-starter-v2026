@@ -959,6 +959,13 @@ If the server restarts once a day, add one cold start: 30.5 s + 6.72 s = 37.2 s 
 
 Two limits on these numbers. `duration_ms` is wall-clock time on my laptop's CPU, with one request at a time, not CPU time measured by the operating system. And 10 requests is a small sample.
 
+With the improvement from milestone 6, the app loads GPT-2 when it starts. That doesn't change the per-request cost. A warm request is still about 0.305 s. The criterion 3 requests in the after run, which are all warm, averaged 0.300 s over 30 requests, against 0.295 s for the same 30 in the before run. What it adds is a one-time 5.7 s at each startup, the mean `startup_ms` over the 9 after starts. The first request doesn't pay a cold start anymore, so for 100 people a day, 1 submit each, with one start a day:
+
+```
+100 people x 1 submit x 0.305 s = 30.5 s
+30.5 s + 1 startup x 5.7 s = 36.2 s of CPU time a day
+```
+
 **Run Log and Verdicts**
 
 | Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
@@ -1156,3 +1163,27 @@ It helped criterion 4. The first `/submit` after a fresh start went from 5.89 to
 What it cost: a longer startup. Loading the model and the dummy pass took 5,497 to 6,136 ms across the 9 after starts, 5,704 ms on average, measured as `startup_ms` and reported separately from the first `/submit`. The service doesn't answer until that's done. So the wait moved from the first request to startup, and it didn't go away. Someone who sends a request the moment the server starts still waits about the same time. Criterion 4 now passes because the trials time the first `/submit` once the server answers `/ping`.
 
 Criterion 3 didn't change, and it still missed 8/10 in every run. Preloading changes when GPT-2 loads, not how much it reads. The same two texts at the 400-token cap still took longer than 500 ms, 536.78 to 656.9 ms before and 593.15 to 616.19 ms after. Criteria 1, 2 and 5 stayed MET.
+
+**What's Still Broken**
+
+- Criterion 3 still misses, 8/10 in all six runs, three before and three after. The two texts at the 400-token cap take about 540 to 660 ms. What I'd do is try a smaller token cap, like 256, or batching. But a smaller cap changes what the detector reads, so it changes the scores, and I put that out of scope at the start. So I stopped there on purpose, not because I ran out of time.
+- Criterion 4 passes, but only because it measures the first `/submit` after the server is ready. Someone who hits it the second it starts still waits about 5.7 s, now while the model loads at startup. If I wanted the real user experience I'd rewrite it to cover any request after start.
+- Smaller stuff:
+    - The server runs in debug mode by default, so a 500 comes back as an HTML page instead of JSON. The log still catches it, but the client gets an ugly response.
+    - Setup time in criterion 5 swung from about 80 to 100 s on most clones to about 351 to 374 s on 3 of the 18. I don't know if that was pip or the model download, because the log only records the total.
+
+With another unit, the first thing I'd do is turn debug mode off in the one start command, so every client gets JSON back, even on a 500. I'd pick it over the criterion 3 fix because it hits everyone who uses the service, it doesn't touch the scores, and a request that takes 0.6 s instead of 0.5 s isn't something a real user would notice.
+
+**How I Used AI**
+
+Moment 1: the capstone criteria
+
+- *What I asked for:* I had Claude draft the five capstone criteria from the numbers I'd measured in milestone 3, like the 217 ms median, the 627 ms slowest warm request and the 6.7 s cold start.
+- *What came back:* five criteria with targets and reasons.
+- *What I changed:* I had them rewritten in my own voice, and I kept the targets that would actually fail, criteria 3 and 4, instead of making them all safe. Both missed in the first run, which is what made the diagnosis and the improvement possible.
+
+Moment 2: the clean checkout test
+
+- *What I asked for:* I had Claude Code clone the repo into a temp folder and follow RUNNING.md exactly, with a fresh virtual environment and a fresh model cache.
+- *What came back:* the install worked, but GPT-2 wouldn't load. An unpinned dependency came in as numpy 2.5.5, which breaks transformers with torch 2.15.0. It confirmed numpy was the cause by putting the clean copy back on 2.5.4.
+- *What I changed:* Claude Code pinned every installed package in `constraints.txt` and applied it from `requirements.txt`, and the second clean checkout worked. Without that test, RUNNING.md would have been broken for anyone else, and I wouldn't have known, because it worked fine on my machine.
