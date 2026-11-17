@@ -46,7 +46,7 @@ py -3.12 -m venv .venv
 
 ### The pinned dependencies
 
-`requirements.txt` pins these exact versions. The packages they pull in are not pinned.
+`requirements.txt` pins these exact versions. Every package they pull in is pinned too, in `constraints.txt`, which `requirements.txt` applies with `-c`. That matters: in a clean install, an unpinned `numpy` came in as 2.5.5, and GPT-2 then failed to load with `cannot import name 'NP_SUPPORTED_MODULES'`. With `numpy` pinned at 2.5.4 it loads.
 
 | Package | Version | What it's for |
 |---|---|---|

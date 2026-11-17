@@ -1,7 +1,10 @@
 # Provenance Guard. Direct dependencies pinned to exact versions, the ones the
-# capstone run was measured with. Packages these pull in are not pinned.
+# capstone run was measured with. The packages these pull in are pinned too,
+# in constraints.txt, which the next line applies.
 #
 # Supported Python: 3.11, 3.12 or 3.13. NOT 3.14. Tested on 3.12.10.
+
+-c constraints.txt
 
 # The web service
 flask==3.1.3
