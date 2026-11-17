@@ -52,3 +52,37 @@
      A number you missed stays where it is, gets diagnosed, and gets a fix
      attempted. That's where the points are.
 ```
+
+# Capstone criteria
+
+Written before any test runs. All five are about the new logging and run path, not the detector itself.
+
+## 1. Every request shows up in the log
+
+Target: I send 20 mixed requests (12 normal submits, 2 appeals, 3 empty text, 3 that get rate limited). All 20 of 20 have a line in logs/requests.jsonl with a matching request_id.
+
+Why: if one request goes missing I can't trust the log for anything. The whole point of adding it was to look back and see what happened, and a log that drops stuff quietly is worse than none because I'd think it's complete. So it's 20 of 20, not 19.
+
+## 2. Failures get logged with the reason
+
+Target: I force 5 failures on purpose (two 400s, two 429s, one 500). 5 of 5 records have the right status_code and the error field filled in, not null.
+
+Why: the bad path is where I'd actually go digging. A failed request that only shows up as a gap in the log is one I'd never find. Anything less than 5 of 5 means some kind of failure is invisible.
+
+## 3. Warm requests are fast
+
+Target: 9 of 10 warm /submit requests, with texts from about 65 to 4,800 characters, finish under 500 ms.
+
+Why: when I measured cost the median was 217 ms but the slowest was 627 ms, so 500 is a real bar and the long texts might not make it. I'm allowing one miss because it's a laptop and other stuff runs in the background. 10 of 10 would mostly be testing my laptop.
+
+## 4. Cold start doesn't feel broken
+
+Target: the first /submit after a fresh start comes back in under 2 seconds, in 3 of 3 starts.
+
+Why: right now it's about 6.7 seconds because GPT-2 loads on the first request. If someone hits the service right after it starts and waits that long, they'll assume it's down. Around 2 seconds is where I'd start refreshing the page myself.
+
+## 5. RUNNING.md works for someone who isn't me
+
+Target: a fresh clone that follows RUNNING.md step by step gets a 200 back from /submit, 3 of 3 times, without me doing anything that isn't written in the doc.
+
+Why: that's the whole point of Path B. The first clean checkout already broke on a numpy version, so this one can really fail. If it only works 2 of 3 times, a reader has a real chance of getting stuck.
