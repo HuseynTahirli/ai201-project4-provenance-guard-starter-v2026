@@ -879,3 +879,81 @@ This extends Provenance Guard, the AI-writing detection backend from Units 7 and
 Shape A, deploy and instrument, run with Path B (local with logs), because the service loads a local model that won't fit a 512 MB free host.
 
 Out of scope: I'm not retraining or swapping the model, not adding new detection signals or changing the combining rule, and not hosting it online.
+
+**Running It**
+
+This runs as Path B, local with logs, started with the one command `.\.venv\Scripts\python.exe app.py`, and [RUNNING.md](RUNNING.md) has the full setup.
+
+**Instrumentation**
+
+Every `/submit` and `/appeal` request writes one JSON line to `logs/requests.jsonl`, including requests that fail. The app also writes one `startup` line each time it starts. `request_log.py` writes the lines, `app.py` collects the values, and `log_summary.py` reads them back. The fields are:
+
+| Field | What it means |
+|---|---|
+| `timestamp` | When the line was written, ISO 8601 in UTC |
+| `request_id` | A new hex id for each request |
+| `endpoint` | `submit`, `appeal`, or `startup` for the startup line |
+| `status_code` | The HTTP status sent back |
+| `input_chars` | The length of the text for `/submit`, or of the reasoning for `/appeal` |
+| `input_preview` | The first 80 characters of that same string |
+| `label` | The guess the label maps to: `ai`, `human` or `unsure` |
+| `final_score` | The combined score, returned as `confidence` |
+| `model_score` | Signal one, the GPT-2 score |
+| `style_score` | Signal two, the style score |
+| `duration_ms` | The whole request in milliseconds, from routing to the response |
+| `model_ms` | Milliseconds spent in `detector.model_signal` |
+| `style_ms` | Milliseconds spent in `stylometry.style_signal` |
+| `error` | `null` when the request worked, otherwise what went wrong |
+
+Fields that don't apply are `null`. A startup line has only `timestamp`, `request_id` and `endpoint`.
+
+These are real lines from the cost run below, in order. The first is the startup marker. The second is the warm-up request, which loaded the model. The next 10 are the measured requests. The last two are failed runs: an empty text that got a 400, and a 429 from the rate limiter. To get the 429 I sent the empty text 11 times from one `creator_id`, because the limiter counts 400s too. The 9 other 400 lines are the same as the one shown apart from `timestamp`, `request_id` and `duration_ms`, so I left them out.
+
+```json
+{"timestamp": "2026-11-17T04:54:54.659+00:00", "request_id": "47b2930002eb40cb870d589f1a815a68", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T04:55:09.080+00:00", "request_id": "6b68c3f6e77e4cc6b916347313e69479", "endpoint": "submit", "status_code": 200, "input_chars": 448, "input_preview": "Remote work offers a wide range of benefits for both employees and organizations", "label": "unsure", "final_score": 0.7693, "model_score": 0.7899, "style_score": 0.7211, "duration_ms": 6719.25, "model_ms": 6714.37, "style_ms": 0.75, "error": null}
+{"timestamp": "2026-11-17T04:55:09.241+00:00", "request_id": "b9c1ac5b68ff4ea1b7362c54ea82764f", "endpoint": "submit", "status_code": 200, "input_chars": 65, "input_preview": "Teams that communicate well do better. This is widely understood.", "label": "human", "final_score": 0.3216, "model_score": 0.2452, "style_score": 0.5, "duration_ms": 136.15, "model_ms": 133.43, "style_ms": 0.03, "error": null}
+{"timestamp": "2026-11-17T04:55:09.397+00:00", "request_id": "e3bcdd741f6344f195cdaa56f85032aa", "endpoint": "submit", "status_code": 200, "input_chars": 157, "input_preview": "ugh the 42 didnt show up again so im gonna be like 20 min late. save me a seat i", "label": "human", "final_score": 0.2668, "model_score": 0.2421, "style_score": 0.3245, "duration_ms": 152.54, "model_ms": 149.87, "style_ms": 0.28, "error": null}
+{"timestamp": "2026-11-17T04:55:09.606+00:00", "request_id": "8ae6d8c2582d40fcac423188898de6a6", "endpoint": "submit", "status_code": 200, "input_chars": 367, "input_preview": "ok so i finally got around to cleaning my room yesterday and honestly it took li", "label": "unsure", "final_score": 0.5451, "model_score": 0.5535, "style_score": 0.5254, "duration_ms": 204.5, "model_ms": 202.32, "style_ms": 0.47, "error": null}
+{"timestamp": "2026-11-17T04:55:09.816+00:00", "request_id": "2a0eec2a5bef43b1b2a2adfdd46bf1ab", "endpoint": "submit", "status_code": 200, "input_chars": 400, "input_preview": "The committee reviewed the proposal on Tuesday and recommended several revisions", "label": "unsure", "final_score": 0.6218, "model_score": 0.5589, "style_score": 0.7686, "duration_ms": 182.39, "model_ms": 179.73, "style_ms": 0.45, "error": null}
+{"timestamp": "2026-11-17T04:55:10.024+00:00", "request_id": "399a67e093e848688f2f098e7da1561e", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Regular exercise offers a wide range of benefits for both physical and mental he", "label": "ai", "final_score": 0.8117, "model_score": 0.8608, "style_score": 0.6971, "duration_ms": 186.73, "model_ms": 184.4, "style_ms": 0.57, "error": null}
+{"timestamp": "2026-11-17T04:55:10.273+00:00", "request_id": "b34c5efd21d947acb7f8f7d3750b747d", "endpoint": "submit", "status_code": 200, "input_chars": 523, "input_preview": "We got to the campsite about four. The pitch was fine, a bit sloped, but there w", "label": "unsure", "final_score": 0.5648, "model_score": 0.6175, "style_score": 0.4419, "duration_ms": 229.87, "model_ms": 226.99, "style_ms": 0.68, "error": null}
+{"timestamp": "2026-11-17T04:55:10.544+00:00", "request_id": "2640770f52074b71ab330b160182e79a", "endpoint": "submit", "status_code": 200, "input_chars": 775, "input_preview": "The importance of effective communication in the workplace cannot be overstated.", "label": "unsure", "final_score": 0.591, "model_score": 0.6662, "style_score": 0.4157, "duration_ms": 250.65, "model_ms": 248.1, "style_ms": 0.56, "error": null}
+{"timestamp": "2026-11-17T04:55:11.025+00:00", "request_id": "f95bc7b4418b441dbb15118270653031", "endpoint": "submit", "status_code": 200, "input_chars": 1455, "input_preview": "Hello Ms. Okafor, I am writing to ask whether I could hand in the chemistry lab ", "label": "unsure", "final_score": 0.4162, "model_score": 0.4629, "style_score": 0.3072, "duration_ms": 466.42, "model_ms": 462.95, "style_ms": 0.85, "error": null}
+{"timestamp": "2026-11-17T04:55:11.643+00:00", "request_id": "924bf0aba4694b1c8a6c8649a7691bf1", "endpoint": "submit", "status_code": 200, "input_chars": 2605, "input_preview": "ugh the 42 didnt show up again so im gonna be like 20 min late. save me a seat i", "label": "unsure", "final_score": 0.3862, "model_score": 0.3191, "style_score": 0.5428, "duration_ms": 614.21, "model_ms": 610.75, "style_ms": 1.61, "error": null}
+{"timestamp": "2026-11-17T04:55:12.288+00:00", "request_id": "67d1eb996ac4458498070f8eb23e4845", "endpoint": "submit", "status_code": 200, "input_chars": 4800, "input_preview": "Hello Ms. Okafor, I am writing to ask whether I could hand in the chemistry lab ", "label": "unsure", "final_score": 0.4177, "model_score": 0.4127, "style_score": 0.4295, "duration_ms": 627.21, "model_ms": 622.56, "style_ms": 2.54, "error": null}
+{"timestamp": "2026-11-17T04:55:12.725+00:00", "request_id": "5287da1651454e0aac0d58fae7d1ee0f", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.52, "model_ms": null, "style_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T04:55:12.871+00:00", "request_id": "766d08bb795042c4906d40d5f8170ab9", "endpoint": "submit", "status_code": 429, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.71, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+```
+
+**What It Costs**
+
+A warm request costs 0.305 seconds of local CPU time on average, measured as a mean `duration_ms` of 305.07 over 10 requests. The median was 217.19. The cold start, the first request after the server starts, took 6.72 seconds (6719.25 ms), because GPT-2 loads into memory then. There is no API spend, because GPT-2 runs locally.
+
+How I measured it: I started the server fresh, sent 1 warm-up `/submit`, then sent 10 `/submit` requests with different texts from 65 to 4800 characters. Each used its own `creator_id` so the rate limiter stayed out of it. Then I ran `log_summary.py --skip-first` on `logs/requests.jsonl`, which drops the first successful `/submit` after the startup line and averages `duration_ms` and `model_ms` over the rest. This is its output, right after the 10 requests:
+
+```
+Request log: .\logs\requests.jsonl
+Records: 12  (startup markers: 1)
+--skip-first: dropped 1 request(s), the first 200 /submit after each start
+  2026-11-17T04:55:09.080+00:00  request_id 6b68c3f6e77e4cc6b916347313e69479  duration_ms 6719.25  model_ms 6714.37
+
+/submit
+  total requests: 10
+  status 200: 10
+  200s only, in milliseconds:
+    duration_ms  mean 305.07  median 217.19  min 136.15  max 627.21  (n=10)
+    model_ms     mean 302.11  median 214.66  min 133.43  max 622.56  (n=10)
+```
+
+Almost all of the time is signal one. The mean `model_ms` was 302.11 of the 305.07 ms. Time grows with length and then levels off, which fits the detector only reading the first 400 tokens. The 1,455 character text took 466.42 ms, while the 2,605 and 4,800 character texts took 614.21 and 627.21 ms. I can't tell from these 10 points exactly where it levels off.
+
+For 100 people a day, with 1 submit per person:
+
+```
+100 people x 1 submit x 0.305 s = 30.5 s of CPU time a day
+```
+
+If the server restarts once a day, add one cold start: 30.5 s + 6.72 s = 37.2 s a day.
+
+Two limits on these numbers. `duration_ms` is wall-clock time on my laptop's CPU, with one request at a time, not CPU time measured by the operating system. And 10 requests is a small sample.
