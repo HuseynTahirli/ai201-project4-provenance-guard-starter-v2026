@@ -867,3 +867,15 @@ If this ran for real I would keep leaning toward fewer wrong accusations, becaus
 ---
 
 📖 **How to run this project: [RUNNING.md](RUNNING.md)**
+
+## Capstone
+
+**What This Extends**
+
+This extends Provenance Guard, the AI-writing detection backend from Units 7 and 8. What's new is an operational layer: structured JSON logging on every /submit and /appeal request (including failed ones), a single documented start command in RUNNING.md, and a measured cost per request in seconds of compute.
+
+**The Shape**
+
+Shape A, deploy and instrument, run with Path B (local with logs), because the service loads a local model that won't fit a 512 MB free host.
+
+Out of scope: I'm not retraining or swapping the model, not adding new detection signals or changing the combining rule, and not hosting it online.
