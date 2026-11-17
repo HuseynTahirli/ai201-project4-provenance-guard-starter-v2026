@@ -17,6 +17,11 @@ models/
 .DS_Store
 Thumbs.db
 
-# NOTE: logs/ and results/ are deliberately NOT ignored. Your audit log and
-# your attack runs are evidence, and they're part of what gets graded.
-# Commit them.
+# Runtime logs, including the capstone request log. Only .gitkeep is kept so
+# the folder exists in a fresh clone.
+#
+# logs/audit.jsonl was committed before this rule, so git still tracks it and
+# its changes still show up. It's graded evidence from units 7 and 8, so keep
+# committing it. results/ is still not ignored.
+logs/*
+!logs/.gitkeep
