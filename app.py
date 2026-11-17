@@ -24,6 +24,7 @@ Routes:
     GET  /health      is the service up, and is the model loaded
 """
 
+import os
 import time
 import uuid
 
@@ -403,14 +404,26 @@ def main():
     print(f"  detector model:  {config.DETECTOR_MODEL}")
     print(f"  rate limiting:   {'ON' if config.RATE_LIMITING_ENABLED else 'off (unit 8)'}")
     print(f"  audit log:       {config.AUDIT_LOG}")
+    print(f"  request log:     {request_log.log_path()}")
     print()
     print("Check it's alive:")
     print(f'  curl -X POST http://{config.HOST}:{config.PORT}/ping \\')
     print('    -H "Content-Type: application/json" \\')
     print("    -d '{\"message\": \"hello\"}'")
     print()
+    # In debug mode the reloader runs this file in two processes: one watches
+    # for code changes and the other serves requests. Only the serving process
+    # writes the startup marker, and it writes a new one each time the reloader
+    # restarts it, which is also when the model has to load again.
+    if not config.DEBUG or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
+        log_startup()
     # debug=True hands out an interactive debugger, so it's local-only — see config.py
     app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
+
+
+def log_startup():
+    """Write the startup marker that log_summary.py --skip-first looks for."""
+    return request_log.write({"request_id": uuid.uuid4().hex, "endpoint": "startup"})
 
 
 if __name__ == "__main__":

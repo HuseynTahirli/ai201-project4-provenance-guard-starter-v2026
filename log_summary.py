@@ -4,20 +4,18 @@ Read logs/requests.jsonl back and summarise it.
 
     python log_summary.py
     python log_summary.py --skip-first
-    python log_summary.py --skip-first --cold-ms 3000
     python log_summary.py --file some/other/requests.jsonl
 
 For each endpoint it prints the total number of requests and the count for
 each status code. For /submit requests that returned 200, it also prints the
 mean, median, min and max of duration_ms and model_ms.
 
---skip-first drops the model-load request from each server start, so the warm
-numbers aren't skewed. The log has no record of when the server started, so
-the script recognises that request by how slow it is. The model loads on the
-first /submit that reaches signal one, which takes seconds instead of the
-usual fraction of a second. Any 200 /submit with model_ms at or above
---cold-ms (5000 by default) counts as one, and every request dropped this way
-is listed so nothing disappears silently.
+--skip-first drops the first 200 /submit after each startup record, so the
+warm numbers aren't skewed by the model loading. The app writes a startup
+record (endpoint "startup") every time it starts. The start of the file also
+counts as a start, because the file is only ever created by a running server,
+and records from before the startup marker existed have no marker of their
+own. Every request dropped this way is listed so nothing disappears silently.
 
 Standard library only.
 """
@@ -30,7 +28,6 @@ from collections import Counter
 from pathlib import Path
 
 DEFAULT_FILE = Path(__file__).parent / "logs" / "requests.jsonl"
-DEFAULT_COLD_MS = 5000.0
 
 
 def read_records(path: Path) -> tuple[list[dict], int]:
@@ -51,14 +48,16 @@ def read_records(path: Path) -> tuple[list[dict], int]:
     return records, bad
 
 
-def is_model_load(record: dict, cold_ms: float) -> bool:
-    model_ms = record.get("model_ms")
-    return (
-        record.get("endpoint") == "submit"
-        and record.get("status_code") == 200
-        and isinstance(model_ms, (int, float))
-        and model_ms >= cold_ms
-    )
+def first_after_each_start(records: list[dict]) -> list[dict]:
+    """The first 200 /submit after the start of the file and after each startup record."""
+    dropped, waiting = [], True
+    for record in records:
+        if record.get("endpoint") == "startup":
+            waiting = True
+        elif waiting and record.get("endpoint") == "submit" and record.get("status_code") == 200:
+            dropped.append(record)
+            waiting = False
+    return dropped
 
 
 def describe(values: list[float]) -> str:
@@ -72,9 +71,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Summarise logs/requests.jsonl.")
     parser.add_argument("--file", type=Path, default=DEFAULT_FILE, help="the request log to read")
     parser.add_argument("--skip-first", action="store_true",
-                        help="drop the model-load /submit from each server start")
-    parser.add_argument("--cold-ms", type=float, default=DEFAULT_COLD_MS,
-                        help="model_ms at or above this marks a model-load request (default 5000)")
+                        help="drop the first 200 /submit after each startup record")
     args = parser.parse_args()
 
     if not args.file.exists():
@@ -82,20 +79,20 @@ def main() -> int:
         return 1
 
     records, bad = read_records(args.file)
+    starts = sum(1 for r in records if r.get("endpoint") == "startup")
     print(f"Request log: {args.file}")
-    print(f"Records: {len(records)}" + (f"  (skipped {bad} unreadable lines)" if bad else ""))
+    print(f"Records: {len(records)}  (startup markers: {starts})" + (f"  (skipped {bad} unreadable lines)" if bad else ""))
 
-    dropped = []
     if args.skip_first:
-        dropped = [r for r in records if is_model_load(r, args.cold_ms)]
-        print(f"--skip-first: dropped {len(dropped)} model-load request(s) with model_ms >= {args.cold_ms:g}")
+        dropped = first_after_each_start(records)
+        print(f"--skip-first: dropped {len(dropped)} request(s), the first 200 /submit after each start")
         for r in dropped:
             print(f"  {r.get('timestamp')}  request_id {r.get('request_id')}  "
                   f"duration_ms {r.get('duration_ms')}  model_ms {r.get('model_ms')}")
         dropped_ids = {id(r) for r in dropped}
         records = [r for r in records if id(r) not in dropped_ids]
 
-    endpoints = sorted({str(r.get("endpoint")) for r in records})
+    endpoints = sorted({str(r.get("endpoint")) for r in records if r.get("endpoint") != "startup"})
     for endpoint in endpoints:
         rows = [r for r in records if str(r.get("endpoint")) == endpoint]
         statuses = Counter(r.get("status_code") for r in rows)

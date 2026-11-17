@@ -14,7 +14,9 @@ Field meanings:
 
     timestamp       when the record was written, ISO 8601 in UTC
     request_id      a new hex id for each request
-    endpoint        "submit" or "appeal"
+    endpoint        "submit" or "appeal", or "startup" for the one marker the
+                    app writes each time it starts. A startup record has only
+                    timestamp, request_id and endpoint, and everything else null.
     status_code     the HTTP status sent back
     input_chars     length of the text (submit) or the reasoning (appeal), or
                     null when there was no string to measure
