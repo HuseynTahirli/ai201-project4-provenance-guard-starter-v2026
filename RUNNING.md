@@ -92,16 +92,16 @@ Or with curl. In PowerShell, `curl` is an alias for a different tool, so use `cu
 curl.exe -X POST http://127.0.0.1:5000/submit -H "Content-Type: application/json" -d '{\"text\": \"Remote work offers a wide range of benefits for both employees and organizations. It provides greater flexibility by allowing individuals to manage their schedules more effectively.\", \"creator_id\": \"me\"}'
 ```
 
-A response looks like this:
+This is the real response to that request, from the clean checkout test. The `content_id` is new every time.
 
 ```json
 {
-  "confidence": 0.7693,
-  "content_id": "c1578627-abe0-46e7-8aa7-45c5036dc776",
-  "guess": "unsure",
-  "label": "We could not tell whether this was written by a person or an AI tool. That happens a lot and it does not mean anything is wrong. Nothing has been flagged.",
-  "model_score": 0.7899,
-  "style_score": 0.7211
+  "confidence": 0.8754,
+  "content_id": "1ef82a47-c809-4218-86d3-a1e8de5d85be",
+  "guess": "ai",
+  "label": "Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.",
+  "model_score": 0.822,
+  "style_score": 1.0
 }
 ```
 
