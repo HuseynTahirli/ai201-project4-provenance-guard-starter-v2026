@@ -24,13 +24,15 @@ Routes:
     GET  /health      is the service up, and is the model loaded
 """
 
+import time
 import uuid
 
-from flask import Flask, jsonify, request
+from flask import Flask, g, jsonify, request
 
 import audit
 import config
 import detector
+import request_log
 import scoring
 import stylometry
 
@@ -38,6 +40,73 @@ app = Flask(__name__)
 
 MAX_TEXT_CHARS = 5000
 MAX_REASONING_CHARS = 2000
+
+
+# ── Request log (capstone) ───────────────────────────────────────────────────
+# Every /submit and /appeal request writes one record to logs/requests.jsonl,
+# including 400s, 404s, 429s and unhandled errors. The record is written in a
+# teardown hook, because teardown runs after every request, even one that
+# raised. None of this changes a response.
+
+LOGGED_ENDPOINTS = {"submit", "appeal"}
+INPUT_FIELD = {"submit": "text", "appeal": "reasoning"}
+
+
+def _ms_since(started: float) -> float:
+    return round((time.perf_counter() - started) * 1000, 2)
+
+
+def _note(**fields):
+    """Add fields to this request's log record."""
+    g.setdefault("request_fields", {}).update(fields)
+
+
+@app.url_value_preprocessor
+def _start_request_log(endpoint, values):
+    # URL value preprocessors run before every before_request hook, including
+    # the rate limiter's. So a request rejected with a 429 still gets a start
+    # time and a request_id.
+    g.request_started = time.perf_counter()
+    g.request_id = uuid.uuid4().hex
+
+
+@app.after_request
+def _note_response(response):
+    if request.endpoint in LOGGED_ENDPOINTS:
+        g.response_status = response.status_code
+        if response.status_code >= 400:
+            body = response.get_json(silent=True)
+            error = body.get("error") if isinstance(body, dict) else None
+            g.response_error = error or f"HTTP {response.status_code}"
+    return response
+
+
+@app.teardown_request
+def _write_request_log(exc):
+    if request.endpoint not in LOGGED_ENDPOINTS or "request_id" not in g:
+        return
+    payload = request.get_json(silent=True)
+    value = payload.get(INPUT_FIELD[request.endpoint]) if isinstance(payload, dict) else None
+    if exc is not None:
+        # An unhandled exception. In debug mode it skips after_request, so the
+        # status is set here.
+        status, error = g.get("response_status") or 500, f"{type(exc).__name__}: {exc}"
+    else:
+        status, error = g.get("response_status"), g.get("response_error")
+    try:
+        request_log.write({
+            **g.get("request_fields", {}),
+            "request_id": g.request_id,
+            "endpoint": request.endpoint,
+            "status_code": status,
+            "input_chars": len(value) if isinstance(value, str) else None,
+            "input_preview": request_log.preview(value),
+            "duration_ms": _ms_since(g.request_started),
+            "error": error,
+        })
+    except OSError:
+        # A full disk or a locked file must not turn a good answer into a crash.
+        app.logger.exception("could not write the request log")
 
 
 # ── Rate limiting — UNIT 8 ────────────────────────────────────────────────────
@@ -231,16 +300,22 @@ def submit():
         return _refuse_submission(payload, "missing_or_empty_creator_id", "creator_id is required and must be a non-empty string.")
 
     # detector.py loads the model on the first call and reuses it after that.
+    started = time.perf_counter()
     try:
         model_score = detector.model_signal(text)
     except ValueError as exc:  # text under 3 tokens is too short to score
         return _refuse_submission(payload, "text_too_short", str(exc))
+    finally:
+        _note(model_ms=_ms_since(started))
 
+    started = time.perf_counter()
     style_score = stylometry.style_signal(text)
+    _note(style_ms=_ms_since(started))
     combined_score = scoring.combine_signals(model_score, style_score)
 
     content_id = str(uuid.uuid4())
     guess, label = scoring.score_to_label(combined_score)
+    _note(label=guess, final_score=combined_score, model_score=model_score, style_score=style_score)
 
     audit.log_decision(
         content_id=content_id,
