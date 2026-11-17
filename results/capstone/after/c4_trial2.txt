@@ -1,0 +1,45 @@
+# Criterion 4, trial 2
+# started 2026-11-16T23:45:26
+
+=== criterion 4, trial 2
+--- start 1
+server started, pid 13936
+server stopped. last console lines:
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:45:33] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:33] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:33] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5674.35
+first /submit: status 200, client 0.194 s, duration_ms 177.91, model_ms 174.64  under 2000
+{"timestamp": "2026-11-17T05:45:33.022+00:00", "request_id": "fbc368948a1c4b8abfded71e374a073e", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5674.35, "error": null}
+{"timestamp": "2026-11-17T05:45:33.428+00:00", "request_id": "eea4f07fd04d4ac582fdf4f4b7d98354", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 177.91, "model_ms": 174.64, "style_ms": 0.71, "startup_ms": null, "error": null}
+--- start 2
+server started, pid 30056
+server stopped. last console lines:
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:45:41] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:41] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:41] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5655.46
+first /submit: status 200, client 0.197 s, duration_ms 177.74, model_ms 175.46  under 2000
+{"timestamp": "2026-11-17T05:45:41.261+00:00", "request_id": "420be6955898443d9b4e1377c6147b99", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5655.46, "error": null}
+{"timestamp": "2026-11-17T05:45:41.680+00:00", "request_id": "f60624573080417294f7c06393a842f4", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 177.74, "model_ms": 175.46, "style_ms": 0.61, "startup_ms": null, "error": null}
+--- start 3
+server started, pid 24932
+server stopped. last console lines:
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:45:49] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:49] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:49] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5546.37
+first /submit: status 200, client 0.198 s, duration_ms 174.59, model_ms 172.36  under 2000
+{"timestamp": "2026-11-17T05:45:49.406+00:00", "request_id": "e6e05243e59e42fa84ca22ff7f5d0d8e", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5546.37, "error": null}
+{"timestamp": "2026-11-17T05:45:49.822+00:00", "request_id": "5668ec40c41a4c9fbe2f4f32b3a1c83d", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 174.59, "model_ms": 172.36, "style_ms": 0.5, "startup_ms": null, "error": null}
+
+SCORE 3/3

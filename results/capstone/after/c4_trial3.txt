@@ -1,0 +1,45 @@
+# Criterion 4, trial 3
+# started 2026-11-16T23:45:50
+
+=== criterion 4, trial 3
+--- start 1
+server started, pid 16576
+server stopped. last console lines:
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:45:57] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:57] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:45:57] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5523.92
+first /submit: status 200, client 0.18 s, duration_ms 177.33, model_ms 174.51  under 2000
+{"timestamp": "2026-11-17T05:45:57.484+00:00", "request_id": "e669e008b662430b94d290e196357382", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5523.92, "error": null}
+{"timestamp": "2026-11-17T05:45:57.875+00:00", "request_id": "9cf3c693fca34c77b5c87c4ca9a41698", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 177.33, "model_ms": 174.51, "style_ms": 0.7, "startup_ms": null, "error": null}
+--- start 2
+server started, pid 384
+server stopped. last console lines:
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:46:05] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:46:05] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:46:06] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5622.42
+first /submit: status 200, client 0.206 s, duration_ms 179.39, model_ms 176.74  under 2000
+{"timestamp": "2026-11-17T05:46:05.689+00:00", "request_id": "8efffe1fa28840c0a9aabeb7b44122be", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5622.42, "error": null}
+{"timestamp": "2026-11-17T05:46:06.103+00:00", "request_id": "bea8aba481394a14930e69cf03f15f96", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 179.39, "model_ms": 176.74, "style_ms": 0.7, "startup_ms": null, "error": null}
+--- start 3
+server started, pid 23848
+server stopped. last console lines:
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:46:14] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:46:14] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:46:14] "POST /ping HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:46:14] "POST /submit HTTP/1.1" 200 -
+startup_ms: 5964.87
+first /submit: status 200, client 0.2 s, duration_ms 185.66, model_ms 182.39  under 2000
+{"timestamp": "2026-11-17T05:46:14.276+00:00", "request_id": "6d924060612d46e198e21090e6b786c8", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "startup_ms": 5964.87, "error": null}
+{"timestamp": "2026-11-17T05:46:14.974+00:00", "request_id": "969ccdd30521494698f1075158b032a4", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 185.66, "model_ms": 182.39, "style_ms": 0.72, "startup_ms": null, "error": null}
+
+SCORE 3/3

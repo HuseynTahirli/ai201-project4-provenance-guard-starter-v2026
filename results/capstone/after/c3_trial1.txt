@@ -1,0 +1,38 @@
+# Criterion 3, trial 1
+# started 2026-11-16T23:44:26
+
+=== criterion 3, trial 1
+server started, pid 3780
+server stopped. last console lines:
+  127.0.0.1 - - [16/Nov/2026 23:44:35] "POST /submit HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:44:35] "POST /submit HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:44:35] "POST /submit HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:44:35] "POST /submit HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:44:36] "POST /submit HTTP/1.1" 200 -
+  127.0.0.1 - - [16/Nov/2026 23:44:37] "POST /submit HTTP/1.1" 200 -
+warm-up: duration_ms 181.4 model_ms 178.87
+   65 chars  duration_ms   123.65  model_ms   121.04  under 500  EV08 short
+  157 chars  duration_ms   140.47  model_ms   136.78  under 500  late bus message
+  367 chars  duration_ms   215.46  model_ms   212.88  under 500  casual_human
+  400 chars  duration_ms   176.34  model_ms   173.39  under 500  formal_human
+  437 chars  duration_ms   186.48  model_ms   182.63  under 500  AI stand-in
+  523 chars  duration_ms   227.82  model_ms   224.69  under 500  FP01
+  775 chars  duration_ms   251.77  model_ms   248.78  under 500  EV03
+ 1455 chars  duration_ms   467.82  model_ms    464.0  under 500  four stand-ins joined
+ 2605 chars  duration_ms   603.47  model_ms   599.51  NOT under 500  eight stand-ins joined
+ 4800 chars  duration_ms   606.04  model_ms   601.92  NOT under 500  all stand-ins, cut to 4800
+
+log lines:
+{"timestamp": "2026-11-17T05:44:34.073+00:00", "request_id": "0c4ecf0b0d8f4cf5a6ed6404bb982ba1", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 181.4, "model_ms": 178.87, "style_ms": 0.73, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:34.217+00:00", "request_id": "842dd5ff3b7145d0be0343d9ac619ff8", "endpoint": "submit", "status_code": 200, "input_chars": 65, "input_preview": "Teams that communicate well do better. This is widely understood.", "label": "human", "final_score": 0.3216, "model_score": 0.2452, "style_score": 0.5, "duration_ms": 123.65, "model_ms": 121.04, "style_ms": 0.03, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:34.376+00:00", "request_id": "66cebaa7625b4d7ebe26836c0c694364", "endpoint": "submit", "status_code": 200, "input_chars": 157, "input_preview": "ugh the 42 didnt show up again so im gonna be like 20 min late. save me a seat i", "label": "human", "final_score": 0.2668, "model_score": 0.2421, "style_score": 0.3245, "duration_ms": 140.47, "model_ms": 136.78, "style_ms": 0.26, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:34.607+00:00", "request_id": "d151284c37a04abe951447516300b02a", "endpoint": "submit", "status_code": 200, "input_chars": 367, "input_preview": "ok so i finally got around to cleaning my room yesterday and honestly it took li", "label": "unsure", "final_score": 0.5451, "model_score": 0.5535, "style_score": 0.5254, "duration_ms": 215.46, "model_ms": 212.88, "style_ms": 0.45, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:34.802+00:00", "request_id": "2c1981655de3443bac598332d88ba2c5", "endpoint": "submit", "status_code": 200, "input_chars": 400, "input_preview": "The committee reviewed the proposal on Tuesday and recommended several revisions", "label": "unsure", "final_score": 0.6218, "model_score": 0.5589, "style_score": 0.7686, "duration_ms": 176.34, "model_ms": 173.39, "style_ms": 0.44, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:35.001+00:00", "request_id": "6c7ae2df7fdd4d1aaf94708942936268", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Regular exercise offers a wide range of benefits for both physical and mental he", "label": "ai", "final_score": 0.8117, "model_score": 0.8608, "style_score": 0.6971, "duration_ms": 186.48, "model_ms": 182.63, "style_ms": 0.53, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:35.243+00:00", "request_id": "825e18c023344fdca9874050c67d2295", "endpoint": "submit", "status_code": 200, "input_chars": 523, "input_preview": "We got to the campsite about four. The pitch was fine, a bit sloped, but there w", "label": "unsure", "final_score": 0.5648, "model_score": 0.6175, "style_score": 0.4419, "duration_ms": 227.82, "model_ms": 224.69, "style_ms": 0.53, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:35.518+00:00", "request_id": "bb9e4d6d3d79471ea3074578de085944", "endpoint": "submit", "status_code": 200, "input_chars": 775, "input_preview": "The importance of effective communication in the workplace cannot be overstated.", "label": "unsure", "final_score": 0.591, "model_score": 0.6662, "style_score": 0.4157, "duration_ms": 251.77, "model_ms": 248.78, "style_ms": 0.46, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:35.998+00:00", "request_id": "b08254a948b64b7bb144575209757c2e", "endpoint": "submit", "status_code": 200, "input_chars": 1455, "input_preview": "Hello Ms. Okafor, I am writing to ask whether I could hand in the chemistry lab ", "label": "unsure", "final_score": 0.4162, "model_score": 0.4629, "style_score": 0.3072, "duration_ms": 467.82, "model_ms": 464.0, "style_ms": 1.01, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:36.605+00:00", "request_id": "7123dc5512624a84a273997efd6462d0", "endpoint": "submit", "status_code": 200, "input_chars": 2605, "input_preview": "ugh the 42 didnt show up again so im gonna be like 20 min late. save me a seat i", "label": "unsure", "final_score": 0.3862, "model_score": 0.3191, "style_score": 0.5428, "duration_ms": 603.47, "model_ms": 599.51, "style_ms": 1.27, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:44:37.226+00:00", "request_id": "060526df76314ceaaee4b5b25e67b29d", "endpoint": "submit", "status_code": 200, "input_chars": 4800, "input_preview": "Hello Ms. Okafor, I am writing to ask whether I could hand in the chemistry lab ", "label": "unsure", "final_score": 0.4177, "model_score": 0.4127, "style_score": 0.4295, "duration_ms": 606.04, "model_ms": 601.92, "style_ms": 1.78, "startup_ms": null, "error": null}
+
+SCORE 8/10

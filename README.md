@@ -1124,3 +1124,35 @@ The two texts that missed were the only ones at the cap, with 533 and 944 tokens
 Criterion 4, MISSED. The same stage, signal one. GPT-2, about 523 MB on disk, loads lazily inside `detector.py::_load`, which runs on the first `/submit`. So the first request pays for the whole load. Across the 9 starts in `results/capstone/before/c4_trial1.txt` to `c4_trial3.txt`, the first `/submit` took 5.89 to 6.57 s.
 
 Pattern: both misses trace to the GPT-2 signal, one about when it loads and one about how much it reads.
+
+**The Improvement**
+
+What I changed: the app now loads GPT-2 and runs one short dummy scoring pass when it starts, before it handles any request. `app.py::preload_detector` does it, and `app.py::log_startup` records how long it took as `startup_ms` in the startup line. That's the one change. The model, the 400-token cap, the thresholds, the weights and both signals are the same. I checked that the same texts still get exactly the same label and scores. All 11 criterion 3 texts, including the warm-up, matched the before run to the fourth decimal.
+
+Why: the criterion 4 diagnosis. GPT-2 loaded lazily inside the first `/submit`, so the first request after every start paid the whole load, 5.89 to 6.57 s across 9 starts.
+
+Before, from `results/capstone/before/scores.json`:
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Every request shows up in the log | 20 of 20 requests have a log line with a matching request_id | 20/20 | 20/20 | 20/20 | MET |
+| 2. Failures get logged with the reason | 5 of 5 forced failures logged with the right status_code and an error | 5/5 | 5/5 | 5/5 | MET |
+| 3. Warm requests are fast | 9 of 10 warm /submit under 500 ms | 8/10 | 8/10 | 8/10 | MISSED |
+| 4. Cold start doesn't feel broken | First /submit after a fresh start under 2,000 ms, 3 of 3 starts | 0/3 | 0/3 | 0/3 | MISSED |
+| 5. RUNNING.md works for someone who isn't me | 3 of 3 fresh clones get a 200 from /submit following RUNNING.md | 3/3 | 3/3 | 3/3 | MET |
+
+After, from `results/capstone/after/scores.json`, with the same method and `capstone_trials.py --label after`:
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Every request shows up in the log | 20 of 20 requests have a log line with a matching request_id | 20/20 | 20/20 | 20/20 | MET |
+| 2. Failures get logged with the reason | 5 of 5 forced failures logged with the right status_code and an error | 5/5 | 5/5 | 5/5 | MET |
+| 3. Warm requests are fast | 9 of 10 warm /submit under 500 ms | 8/10 | 8/10 | 8/10 | MISSED |
+| 4. Cold start doesn't feel broken | First /submit after a fresh start under 2,000 ms, 3 of 3 starts | 3/3 | 3/3 | 3/3 | MET |
+| 5. RUNNING.md works for someone who isn't me | 3 of 3 fresh clones get a 200 from /submit following RUNNING.md | 3/3 | 3/3 | 3/3 | MET |
+
+It helped criterion 4. The first `/submit` after a fresh start went from 5.89 to 6.57 s to 167 to 186 ms across 9 starts, so criterion 4 went from 0/3 to 3/3 in every run. It also shows in criterion 5. The RUNNING.md sample request took 6.2 to 6.8 s in the before clones and 0.5 to 0.6 s after, because it's the first request after a start.
+
+What it cost: a longer startup. Loading the model and the dummy pass took 5,497 to 6,136 ms across the 9 after starts, 5,704 ms on average, measured as `startup_ms` and reported separately from the first `/submit`. The service doesn't answer until that's done. So the wait moved from the first request to startup, and it didn't go away. Someone who sends a request the moment the server starts still waits about the same time. Criterion 4 now passes because the trials time the first `/submit` once the server answers `/ping`.
+
+Criterion 3 didn't change, and it still missed 8/10 in every run. Preloading changes when GPT-2 loads, not how much it reads. The same two texts at the 400-token cap still took longer than 500 ms, 536.78 to 656.9 ms before and 593.15 to 616.19 ms after. Criteria 1, 2 and 5 stayed MET.

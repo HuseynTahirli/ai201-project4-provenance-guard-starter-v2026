@@ -1,0 +1,32 @@
+# Criterion 2, trial 2
+# started 2026-11-16T23:44:06
+
+=== criterion 2, trial 2
+server started, pid 15128
+server stopped. last console lines:
+    File "C:\Users\husey\codepath\ai201-project4-provenance-guard-starter-v2026\.venv\Lib\site-packages\flask_limiter\extension.py", line 1314, in __inner
+      return cast(R, flask.current_app.ensure_sync(obj)(*a, **k))
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\husey\codepath\ai201-project4-provenance-guard-starter-v2026\app.py", line 292, in submit
+      raise RuntimeError("fault injection: forced 500 for testing")
+  RuntimeError: fault injection: forced 500 for testing
+setup: 10 normal submits from one creator_id, to use up its 10 a minute
+400 empty text: response 400, logged 400, error 'text is required and must be a non-empty string.'  OK
+  response body: {"error": "text is required and must be a non-empty string."}
+400 non-object body: response 400, logged 400, error 'Request body must be a JSON object.'  OK
+  response body: {"error": "Request body must be a JSON object."}
+429 first: response 429, logged 429, error 'rate_limited'  OK
+  response body: {"error": "rate_limited", "limit": "10 per 1 minute", "message": "Too many submissions. Try again shortly."}
+429 second: response 429, logged 429, error 'rate_limited'  OK
+  response body: {"error": "rate_limited", "limit": "10 per 1 minute", "message": "Too many submissions. Try again shortly."}
+500 fault injection: response 500, logged 500, error 'RuntimeError: fault injection: forced 500 for testing'  OK
+  response body: "<!doctype html>\n<html lang=en>\n  <head>\n    <title>RuntimeError: fault injection: forced 500 for testing\n // Werkzeug Debugger</title>\n    <link rel=\"stylesheet\" href=\"?__debugger__=yes&amp;c
+
+log lines for the 5 failures:
+{"timestamp": "2026-11-17T05:44:15.590+00:00", "request_id": "b73406ebbd484f5181357c6c91b2d133", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.49, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:44:15.604+00:00", "request_id": "95380a0a173c479b9b743e097c0a3c59", "endpoint": "submit", "status_code": 400, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.69, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "Request body must be a JSON object."}
+{"timestamp": "2026-11-17T05:44:15.619+00:00", "request_id": "e095860014684579bf725f93d52b5f8d", "endpoint": "submit", "status_code": 429, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.97, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:44:15.637+00:00", "request_id": "41a31a9f79a848a4a01c1049dcb30e56", "endpoint": "submit", "status_code": 429, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.84, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:44:15.650+00:00", "request_id": "e76fe60df0214c19a2acccdf46af080c", "endpoint": "submit", "status_code": 500, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 0.82, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "RuntimeError: fault injection: forced 500 for testing"}
+
+SCORE 5/5

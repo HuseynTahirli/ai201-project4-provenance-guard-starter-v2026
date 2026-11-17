@@ -1,0 +1,59 @@
+# Criterion 1, trial 2
+# started 2026-11-16T23:43:34
+
+=== criterion 1, trial 2
+server started, pid 9692
+server stopped. last console lines:
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 429 -
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 429 -
+  127.0.0.1 - - [16/Nov/2026 23:43:44] "POST /submit HTTP/1.1" 429 -
+sent 20 requests, log gained 20 request lines
+statuses sent: 200 200 200 200 200 200 200 200 200 200 200 200 200 200 400 400 400 429 429 429
+ 1 submit 200 MATCH  request_id ec8205f3772a4710bceb84c245ef0d7d
+ 2 submit 200 MATCH  request_id b0bb89e429234f4cade2d2642d3e9ebc
+ 3 submit 200 MATCH  request_id 75ebe10b55444543981d30bdb4e2b57f
+ 4 submit 200 MATCH  request_id 82f710c4b2014e549237139ad6c88fae
+ 5 submit 200 MATCH  request_id 6896e2c015f0485e8ec5a81a59a8b280
+ 6 submit 200 MATCH  request_id 0862388f0f9e4fa5a0626c108bd07c40
+ 7 submit 200 MATCH  request_id 2642880643a9418183d8cf0b759a938f
+ 8 submit 200 MATCH  request_id a682e813459c47c79d0c6c503ec094de
+ 9 submit 200 MATCH  request_id b325d3a634474c82a8d948537c23c8c9
+10 submit 200 MATCH  request_id 6ecc2ba356274734974453a30268bda9
+11 submit 200 MATCH  request_id c6126a4718ba4eed88333cc7ed883eb2
+12 submit 200 MATCH  request_id 703b49150ff7447392156cef3c87291e
+13 appeal 200 MATCH  request_id 36f221fd945f4bf3b937edf7f1af1610
+14 appeal 200 MATCH  request_id 4dcce2d9fd294958af2ee9ee761081e0
+15 submit 400 MATCH  request_id 7bb58e8b762d4dcb87ff31d96164df49
+16 submit 400 MATCH  request_id 8ca861873f6046acba2756e1b16806ec
+17 submit 400 MATCH  request_id b3530b8bbdb24708a2150702fe0c969c
+18 submit 429 MATCH  request_id d7b8c0da3885400381e5e2a414549272
+19 submit 429 MATCH  request_id 733ce0d908cd4229a82ec706a14527c6
+20 submit 429 MATCH  request_id 2869255527944d14b503cd39ba047482
+unique request_ids in the new lines: 20
+
+log lines:
+{"timestamp": "2026-11-17T05:43:41.895+00:00", "request_id": "ec8205f3772a4710bceb84c245ef0d7d", "endpoint": "submit", "status_code": 200, "input_chars": 453, "input_preview": "Capstone c1 trial 2 request 01. I am applying for the weekend shift supervisor p", "label": "unsure", "final_score": 0.3655, "model_score": 0.2686, "style_score": 0.5917, "duration_ms": 206.21, "model_ms": 203.52, "style_ms": 0.77, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:42.147+00:00", "request_id": "b0bb89e429234f4cade2d2642d3e9ebc", "endpoint": "submit", "status_code": 200, "input_chars": 470, "input_preview": "Capstone c1 trial 2 request 02. The survey was sent to 212 households on the eas", "label": "unsure", "final_score": 0.4769, "model_score": 0.41, "style_score": 0.6331, "duration_ms": 239.24, "model_ms": 236.52, "style_ms": 0.41, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:42.357+00:00", "request_id": "75ebe10b55444543981d30bdb4e2b57f", "endpoint": "submit", "status_code": 200, "input_chars": 252, "input_preview": "Capstone c1 trial 2 request 03. hey are you still coming saturday? mum wants to ", "label": "human", "final_score": 0.231, "model_score": 0.1049, "style_score": 0.5254, "duration_ms": 184.74, "model_ms": 181.81, "style_ms": 0.48, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:42.558+00:00", "request_id": "82f710c4b2014e549237139ad6c88fae", "endpoint": "submit", "status_code": 200, "input_chars": 189, "input_preview": "Capstone c1 trial 2 request 04. ugh the 42 didnt show up again so im gonna be li", "label": "human", "final_score": 0.2142, "model_score": 0.1172, "style_score": 0.4404, "duration_ms": 184.98, "model_ms": 181.15, "style_ms": 0.47, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:42.755+00:00", "request_id": "6896e2c015f0485e8ec5a81a59a8b280", "endpoint": "submit", "status_code": 200, "input_chars": 274, "input_preview": "Capstone c1 trial 2 request 05. Just got out of the dentist, my whole face is nu", "label": "human", "final_score": 0.2939, "model_score": 0.1018, "style_score": 0.7423, "duration_ms": 192.53, "model_ms": 190.18, "style_ms": 0.33, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:43.003+00:00", "request_id": "0862388f0f9e4fa5a0626c108bd07c40", "endpoint": "submit", "status_code": 200, "input_chars": 395, "input_preview": "Capstone c1 trial 2 request 06. Has anyone else had the dishwasher error E24 on ", "label": "unsure", "final_score": 0.3564, "model_score": 0.1712, "style_score": 0.7884, "duration_ms": 225.91, "model_ms": 223.8, "style_ms": 0.37, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:43.257+00:00", "request_id": "2642880643a9418183d8cf0b759a938f", "endpoint": "submit", "status_code": 200, "input_chars": 359, "input_preview": "Capstone c1 trial 2 request 07. Finally beat the second boss after about thirty ", "label": "human", "final_score": 0.2666, "model_score": 0.1323, "style_score": 0.5801, "duration_ms": 250.65, "model_ms": 248.03, "style_ms": 0.66, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:43.481+00:00", "request_id": "a682e813459c47c79d0c6c503ec094de", "endpoint": "submit", "status_code": 200, "input_chars": 310, "input_preview": "Capstone c1 trial 2 request 08. I agree with Priya about the ending but I read t", "label": "unsure", "final_score": 0.429, "model_score": 0.2999, "style_score": 0.7303, "duration_ms": 200.89, "model_ms": 198.4, "style_ms": 0.37, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:43.720+00:00", "request_id": "b325d3a634474c82a8d948537c23c8c9", "endpoint": "submit", "status_code": 200, "input_chars": 389, "input_preview": "Capstone c1 trial 2 request 09. Good point about the sample size in that study, ", "label": "unsure", "final_score": 0.4693, "model_score": 0.3509, "style_score": 0.7455, "duration_ms": 235.0, "model_ms": 231.97, "style_ms": 0.74, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:43.927+00:00", "request_id": "6ecc2ba356274734974453a30268bda9", "endpoint": "submit", "status_code": 200, "input_chars": 469, "input_preview": "Capstone c1 trial 2 request 10. Regular exercise offers a wide range of benefits", "label": "unsure", "final_score": 0.7026, "model_score": 0.6865, "style_score": 0.7402, "duration_ms": 203.72, "model_ms": 201.2, "style_ms": 0.54, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:44.161+00:00", "request_id": "c6126a4718ba4eed88333cc7ed883eb2", "endpoint": "submit", "status_code": 200, "input_chars": 469, "input_preview": "Capstone c1 trial 2 request 11. Reading is one of the most effective ways to exp", "label": "unsure", "final_score": 0.5665, "model_score": 0.5001, "style_score": 0.7213, "duration_ms": 206.39, "model_ms": 202.18, "style_ms": 0.52, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:44.386+00:00", "request_id": "703b49150ff7447392156cef3c87291e", "endpoint": "submit", "status_code": 200, "input_chars": 484, "input_preview": "Capstone c1 trial 2 request 12. Effective time management is an essential skill ", "label": "unsure", "final_score": 0.5427, "model_score": 0.4306, "style_score": 0.8043, "duration_ms": 220.98, "model_ms": 217.77, "style_ms": 0.5, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:44.395+00:00", "request_id": "36f221fd945f4bf3b937edf7f1af1610", "endpoint": "appeal", "status_code": 200, "input_chars": 58, "input_preview": "c1 trial 2 appeal for 30afaec3-f590-4be3-9159-069e3b6fc1ee", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 5.59, "model_ms": null, "style_ms": null, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:44.411+00:00", "request_id": "4dcce2d9fd294958af2ee9ee761081e0", "endpoint": "appeal", "status_code": 200, "input_chars": 58, "input_preview": "c1 trial 2 appeal for 4706b222-679b-4d0b-aca7-a4b22acfc154", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.94, "model_ms": null, "style_ms": null, "startup_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:43:44.442+00:00", "request_id": "7bb58e8b762d4dcb87ff31d96164df49", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.84, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:43:44.459+00:00", "request_id": "8ca861873f6046acba2756e1b16806ec", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.81, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:43:44.464+00:00", "request_id": "b3530b8bbdb24708a2150702fe0c969c", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.05, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:43:44.490+00:00", "request_id": "d7b8c0da3885400381e5e2a414549272", "endpoint": "submit", "status_code": 429, "input_chars": 474, "input_preview": "Capstone c1 trial 2 request 13. Sustainable living plays an important role in pr", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.68, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:43:44.495+00:00", "request_id": "733ce0d908cd4229a82ec706a14527c6", "endpoint": "submit", "status_code": 429, "input_chars": 471, "input_preview": "Capstone c1 trial 2 request 14. Online learning has transformed the way that stu", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.65, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:43:44.503+00:00", "request_id": "2869255527944d14b503cd39ba047482", "endpoint": "submit", "status_code": 429, "input_chars": 335, "input_preview": "Capstone c1 trial 2 request 15. Working from a coffee shop has a lot of benefits", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.25, "model_ms": null, "style_ms": null, "startup_ms": null, "error": "rate_limited"}
+
+SCORE 20/20
