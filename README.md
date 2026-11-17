@@ -1100,3 +1100,26 @@ temp folder removed: True
 clone 1: 200 from /submit
 SCORE 3/3
 ```
+
+Diagnosis of the two misses:
+
+Criterion 3, MISSED. The stage is signal one, the GPT-2 perplexity in `detector.py`. The mechanism is that the forward pass takes longer the more tokens it reads, up to the 400-token cap in `config.DETECTOR_MAX_TOKENS`. I counted tokens with the same GPT-2 tokenizer and the same truncation `detector.py::perplexity` uses, and took `duration_ms` from `results/capstone/before/c3_trial1.txt`:
+
+| Text | Characters | GPT-2 tokens | Tokens read | At the 400-token cap | duration_ms, run 1 | Under 500 ms, run 1 |
+|---|---|---|---|---|---|---|
+| EV08 short | 65 | 13 | 13 | no | 129.24 | yes |
+| late bus message | 157 | 39 | 39 | no | 135.32 | yes |
+| casual_human | 367 | 83 | 83 | no | 189.53 | yes |
+| formal_human | 400 | 67 | 67 | no | 173.29 | yes |
+| AI stand-in | 437 | 76 | 76 | no | 177.99 | yes |
+| FP01 | 523 | 116 | 116 | no | 216.76 | yes |
+| EV03 | 775 | 130 | 130 | no | 245.77 | yes |
+| four stand-ins joined | 1,455 | 298 | 298 | no | 420.92 | yes |
+| eight stand-ins joined | 2,605 | 533 | 400 | yes | 536.78 | no |
+| all stand-ins, cut to 4800 | 4,800 | 944 | 400 | yes | 546.06 | no |
+
+The two texts that missed were the only ones at the cap, with 533 and 944 tokens, so the detector read 400 of each. In run 1 they took 536.78 and 546.06 ms, and across all three runs they took 536.78 to 656.9 ms. So a full 400-token pass on this CPU takes about 540 to 660 ms. The longest text under the cap had 298 tokens and took 420.92 to 455.03 ms. Text past the cap isn't read, which is why the 4,800 character text took about as long as the 2,605 character one. My criterion assumed latency was flat across text lengths, and it isn't.
+
+Criterion 4, MISSED. The same stage, signal one. GPT-2, about 523 MB on disk, loads lazily inside `detector.py::_load`, which runs on the first `/submit`. So the first request pays for the whole load. Across the 9 starts in `results/capstone/before/c4_trial1.txt` to `c4_trial3.txt`, the first `/submit` took 5.89 to 6.57 s.
+
+Pattern: both misses trace to the GPT-2 signal, one about when it loads and one about how much it reads.
