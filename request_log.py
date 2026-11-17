@@ -16,7 +16,8 @@ Field meanings:
     request_id      a new hex id for each request
     endpoint        "submit" or "appeal", or "startup" for the one marker the
                     app writes each time it starts. A startup record has only
-                    timestamp, request_id and endpoint, and everything else null.
+                    timestamp, request_id, endpoint and startup_ms, plus error
+                    if the model couldn't load, and everything else null.
     status_code     the HTTP status sent back
     input_chars     length of the text (submit) or the reasoning (appeal), or
                     null when there was no string to measure
@@ -29,6 +30,8 @@ Field meanings:
     duration_ms     the whole request, from routing to the response
     model_ms        time spent in detector.model_signal
     style_ms        time spent in stylometry.style_signal
+    startup_ms      startup records only: how long loading GPT-2 and one short
+                    scoring pass took before the server started taking requests
     error           null when the request succeeded, otherwise what went wrong
 """
 
@@ -41,7 +44,7 @@ import config
 FIELDS = (
     "timestamp", "request_id", "endpoint", "status_code", "input_chars",
     "input_preview", "label", "final_score", "model_score", "style_score",
-    "duration_ms", "model_ms", "style_ms", "error",
+    "duration_ms", "model_ms", "style_ms", "startup_ms", "error",
 )
 PREVIEW_CHARS = 80
 

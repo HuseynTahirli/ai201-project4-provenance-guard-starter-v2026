@@ -903,9 +903,10 @@ Every `/submit` and `/appeal` request writes one JSON line to `logs/requests.jso
 | `duration_ms` | The whole request in milliseconds, from routing to the response |
 | `model_ms` | Milliseconds spent in `detector.model_signal` |
 | `style_ms` | Milliseconds spent in `stylometry.style_signal` |
+| `startup_ms` | Startup lines only: how long loading GPT-2 and one short scoring pass took before the server handled requests. Added in milestone 6, so lines from before then don't have it |
 | `error` | `null` when the request worked, otherwise what went wrong |
 
-Fields that don't apply are `null`. A startup line has only `timestamp`, `request_id` and `endpoint`.
+Fields that don't apply are `null`. A startup line has only `timestamp`, `request_id` and `endpoint`, plus `startup_ms` from milestone 6 on.
 
 These are real lines from the cost run below, in order. The first is the startup marker. The second is the warm-up request, which loaded the model. The next 10 are the measured requests. The last two are failed runs: an empty text that got a 400, and a 429 from the rate limiter. To get the 429 I sent the empty text 11 times from one `creator_id`, because the limiter counts 400s too. The 9 other 400 lines are the same as the one shown apart from `timestamp`, `request_id` and `duration_ms`, so I left them out.
 

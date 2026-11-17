@@ -418,17 +418,44 @@ def main():
     print()
     # In debug mode the reloader runs this file in two processes: one watches
     # for code changes and the other serves requests. Only the serving process
-    # writes the startup marker, and it writes a new one each time the reloader
-    # restarts it, which is also when the model has to load again.
+    # loads the model and writes the startup marker, and it does both again
+    # each time the reloader restarts it.
     if not config.DEBUG or os.environ.get("WERKZEUG_RUN_MAIN") == "true":
-        log_startup()
+        startup_ms, error = preload_detector()
+        log_startup(startup_ms, error)
     # debug=True hands out an interactive debugger, so it's local-only — see config.py
     app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
 
 
-def log_startup():
+PRELOAD_TEXT = "Loading the detector before the first request arrives."
+
+
+def preload_detector():
+    """
+    Load GPT-2 and run one short scoring pass before the server handles any
+    request, so the first /submit doesn't pay for the load. The result of the
+    pass is thrown away. Returns (milliseconds taken, error or None).
+
+    If the model can't load, the app still starts, the same as before, and the
+    first /submit tries again.
+    """
+    print("Loading GPT-2 before accepting requests. This takes a few seconds.")
+    started = time.perf_counter()
+    try:
+        detector.model_signal(PRELOAD_TEXT)
+        error = None
+    except detector.DetectorUnavailable as exc:
+        error = f"DetectorUnavailable: {exc}"
+        print(f"Could not preload the model, it will load on the first request instead.\n{exc}")
+    startup_ms = _ms_since(started)
+    print(f"Ready after {startup_ms / 1000:.1f} s.")
+    return startup_ms, error
+
+
+def log_startup(startup_ms=None, error=None):
     """Write the startup marker that log_summary.py --skip-first looks for."""
-    return request_log.write({"request_id": uuid.uuid4().hex, "endpoint": "startup"})
+    return request_log.write({"request_id": uuid.uuid4().hex, "endpoint": "startup",
+                              "startup_ms": startup_ms, "error": error})
 
 
 if __name__ == "__main__":

@@ -74,7 +74,7 @@ I picked this command because it's the one that works on Windows. `gunicorn` is 
 
 By default it runs in debug mode, which only happens on `127.0.0.1`. To turn debug mode off, run `$env:AI201_DEBUG = "0"` in the same terminal before starting it.
 
-The first `/submit` after a start takes several seconds while GPT-2 loads into memory. Later ones take a fraction of a second.
+When it starts, it loads GPT-2 and scores one short dummy text before it handles any request. On the test laptop that took about 7 seconds, and the startup line in `logs/requests.jsonl` records it as `startup_ms`. A request sent during that time waits until the model is ready. After that, the first `/submit` is as fast as the rest, a fraction of a second.
 
 ---
 
@@ -131,7 +131,7 @@ To read the request log back:
 .\.venv\Scripts\python.exe log_summary.py --skip-first
 ```
 
-`--skip-first` drops the first successful `/submit` after each start, which is the slow one that loads the model.
+`--skip-first` drops the first successful `/submit` after each start. Before the app loaded GPT-2 at startup, that was the slow request that loaded the model. It still matters for logs from before that change.
 
 ---
 
@@ -170,7 +170,7 @@ That's over the limit before any request arrives. A free host also has no persis
 |---|---|
 | `Cannot bind parameter 'Headers'` | You used `curl` in PowerShell. Use `curl.exe` on one line, or `Invoke-RestMethod`. |
 | `Address already in use` | A server from an earlier run is still going. Stop it first. |
-| The first `/submit` takes several seconds | GPT-2 is loading. Later requests are fast. |
+| The service takes several seconds to answer after it starts | GPT-2 is loading before the first request. Requests sent then wait. Once it's ready, they're fast. |
 | `429` | The rate limit is 10 a minute and 100 a day per `creator_id`. |
 | `DLL load failed ... An Application Control policy has blocked this file` | Windows Smart App Control blocked PyTorch. This happened during unit 7 on this machine. Turning Smart App Control off is the usual fix, but Windows may not let you turn it back on without a reset. |
 | `DetectorUnavailable` | The model isn't downloaded. Run `.\.venv\Scripts\python.exe detector.py` once. |

@@ -297,8 +297,12 @@ def criterion4(trial: Trial, number: int) -> str:
             status, body, seconds = call("/submit", {"text": WARMUP_TEXT, "creator_id": f"c4_t{number}_s{start}"})
             records = server.new_records()
         first = [r for r in records if r.get("endpoint") == "submit"][0]
+        startup = [r for r in records if r.get("endpoint") == "startup"]
         ok = first.get("status_code") == 200 and first["duration_ms"] < 2000
         score += ok
+        # The first /submit is sent only after the server answers /ping, so it
+        # is timed once the server is ready. startup_ms is reported separately.
+        trial.out(f"startup_ms: {startup[0].get('startup_ms') if startup else None}")
         trial.out(f"first /submit: status {status}, client {seconds} s, duration_ms {first['duration_ms']}, model_ms {first['model_ms']}  {'under 2000' if ok else 'NOT under 2000'}")
         for r in records:
             trial.out(json.dumps(r, ensure_ascii=False))
