@@ -1,0 +1,42 @@
+# Criterion 4, trial 2
+# started 2026-11-16T23:11:17
+
+=== criterion 4, trial 2
+--- start 1
+server started, pid 1860
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:11:18] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:11:24] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.471 s, duration_ms 6447.04, model_ms 6443.12  NOT under 2000
+{"timestamp": "2026-11-17T05:11:18.377+00:00", "request_id": "d3e27d3c99ac4fdda935cc996ca4d0b4", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:24.879+00:00", "request_id": "8bc47cccf833430182ddb9b79318bbed", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6447.04, "model_ms": 6443.12, "style_ms": 0.93, "error": null}
+--- start 2
+server started, pid 13984
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:11:27] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:11:33] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.434 s, duration_ms 6405.48, model_ms 6401.89  NOT under 2000
+{"timestamp": "2026-11-17T05:11:27.061+00:00", "request_id": "c13f407da4354cc986ddae70b5561ca6", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:33.524+00:00", "request_id": "7a97ac5394484583b96f37bb67232d12", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6405.48, "model_ms": 6401.89, "style_ms": 0.92, "error": null}
+--- start 3
+server started, pid 14104
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:11:35] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:11:42] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.333 s, duration_ms 6329.93, model_ms 6327.12  NOT under 2000
+{"timestamp": "2026-11-17T05:11:35.679+00:00", "request_id": "58dba1827a6645868455242031273162", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:42.052+00:00", "request_id": "ee86997e637145b4ac085c621f460dc2", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6329.93, "model_ms": 6327.12, "style_ms": 0.76, "error": null}
+
+SCORE 0/3

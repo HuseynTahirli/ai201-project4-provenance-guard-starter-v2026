@@ -957,3 +957,146 @@ For 100 people a day, with 1 submit per person:
 If the server restarts once a day, add one cold start: 30.5 s + 6.72 s = 37.2 s a day.
 
 Two limits on these numbers. `duration_ms` is wall-clock time on my laptop's CPU, with one request at a time, not CPU time measured by the operating system. And 10 requests is a small sample.
+
+**Run Log and Verdicts**
+
+| Criterion | Target | Run 1 | Run 2 | Run 3 | Verdict |
+|---|---|---|---|---|---|
+| 1. Every request shows up in the log | 20 of 20 requests have a log line with a matching request_id | 20/20 | 20/20 | 20/20 | MET |
+| 2. Failures get logged with the reason | 5 of 5 forced failures logged with the right status_code and an error | 5/5 | 5/5 | 5/5 | MET |
+| 3. Warm requests are fast | 9 of 10 warm /submit under 500 ms | 8/10 | 8/10 | 8/10 | MISSED |
+| 4. Cold start doesn't feel broken | First /submit after a fresh start under 2,000 ms, 3 of 3 starts | 0/3 | 0/3 | 0/3 | MISSED |
+| 5. RUNNING.md works for someone who isn't me | 3 of 3 fresh clones get a 200 from /submit following RUNNING.md | 3/3 | 3/3 | 3/3 | MET |
+
+Each criterion ran three times, and every trial started its own server, so each run is a real re-run. Nothing in the app changed between trials. A verdict is MET only if the target held in all three runs. The raw output of every trial is in `results/capstone/before/`, one file per criterion per trial, and the scores are in `results/capstone/before/scores.json`. `capstone_trials.py` ran all of it.
+
+How the runs were set up:
+
+- Servers for criteria 1 to 4 started with `PG_FAULT_INJECT=1`. That only matters for a `/submit` that sends the header `X-PG-Fault: 500`, which criterion 2 uses to force a real 500. It was added in its own commit, "capstone m5: env-gated fault injection for testing 500s", and it's off by default.
+- The `/submit` response doesn't include the `request_id`, so for criterion 1 I matched each request to its log line by order, `endpoint`, `status_code` and `input_preview`, and checked each line has a 32 character `request_id`. Each normal submit started with its own numbered text, so every preview was different.
+- Criterion 2 first sent 10 normal submits from one `creator_id` to use up its 10 a minute, so the next two from it got a 429. Only the 5 forced failures were scored.
+- Criterion 5 ran the PowerShell blocks from each fresh clone's own RUNNING.md, exactly as written, in a new temp folder outside this repo. Two things were outside the doc. `HF_HOME` pointed at the temp folder so every clone downloaded the model fresh, and pip's download cache was left on to save time. I checked free disk before each clone and deleted each temp folder afterwards.
+
+Real output from run 1 of each criterion:
+
+Criterion 1, from `results/capstone/before/c1_trial1.txt`, produced by `capstone_trials.py::criterion1`. The log lines are written by `request_log.py::write`, called from `app.py::_write_request_log`.
+
+```
+sent 20 requests, log gained 20 request lines
+statuses sent: 200 200 200 200 200 200 200 200 200 200 200 200 200 200 400 400 400 429 429 429
+ 1 submit 200 MATCH  request_id 6a29675e63a4499496f6d93d2633dcea
+ 2 submit 200 MATCH  request_id 2ad1ae79cbfc4aa2ac59fbbd81957e58
+ 3 submit 200 MATCH  request_id be2590e552a647588896f5b3c8bef18c
+ 4 submit 200 MATCH  request_id 34382cc1d667434a8fce7af2e6df924a
+ 5 submit 200 MATCH  request_id 357b3b4d453044bfb784d1874d3a410d
+ 6 submit 200 MATCH  request_id 989cf9c5cf7e4e19a05b5f2ad52afeee
+ 7 submit 200 MATCH  request_id 4413beb45db54841881f47e8e2275e9b
+ 8 submit 200 MATCH  request_id 5a0b887659bd44d29c46edb9fdddb096
+ 9 submit 200 MATCH  request_id d112a68a8f474b11920bcf2ed33859ce
+10 submit 200 MATCH  request_id e9b73050d42243c0906e779951fcef51
+11 submit 200 MATCH  request_id f51811dca50a4492b474217cda377082
+12 submit 200 MATCH  request_id 936703c7b535483d8f177e66b2f8f77b
+13 appeal 200 MATCH  request_id c6218853f6dc4ca2bb64569d1c861ed4
+14 appeal 200 MATCH  request_id 4cc95b4e2ed747968ec6939300138957
+15 submit 400 MATCH  request_id 134afcdac14742a68b763ca078fed34d
+16 submit 400 MATCH  request_id e44ef76a640b4bb1b817ee35a7b5489d
+17 submit 400 MATCH  request_id dd15196423154a71ab865f363e8db84a
+18 submit 429 MATCH  request_id 6fdfec61d3f24733a6eca84a0782e5cb
+19 submit 429 MATCH  request_id d3ccde8202f74c3b812e97b01d4bd0e4
+20 submit 429 MATCH  request_id 64c1552918dd46b6a2236fea95edb2d3
+unique request_ids in the new lines: 20
+SCORE 20/20
+```
+
+The first 5 of the 20 log lines it matched:
+
+```json
+{"timestamp": "2026-11-17T05:09:23.360+00:00", "request_id": "6a29675e63a4499496f6d93d2633dcea", "endpoint": "submit", "status_code": 200, "input_chars": 453, "input_preview": "Capstone c1 trial 1 request 01. I am applying for the weekend shift supervisor p", "label": "unsure", "final_score": 0.3672, "model_score": 0.271, "style_score": 0.5917, "duration_ms": 5973.72, "model_ms": 5971.07, "style_ms": 0.76, "error": null}
+{"timestamp": "2026-11-17T05:09:23.580+00:00", "request_id": "2ad1ae79cbfc4aa2ac59fbbd81957e58", "endpoint": "submit", "status_code": 200, "input_chars": 470, "input_preview": "Capstone c1 trial 1 request 02. The survey was sent to 212 households on the eas", "label": "unsure", "final_score": 0.4783, "model_score": 0.412, "style_score": 0.6331, "duration_ms": 204.24, "model_ms": 201.42, "style_ms": 0.62, "error": null}
+{"timestamp": "2026-11-17T05:09:23.767+00:00", "request_id": "be2590e552a647588896f5b3c8bef18c", "endpoint": "submit", "status_code": 200, "input_chars": 252, "input_preview": "Capstone c1 trial 1 request 03. hey are you still coming saturday? mum wants to ", "label": "human", "final_score": 0.2306, "model_score": 0.1043, "style_score": 0.5254, "duration_ms": 170.96, "model_ms": 166.68, "style_ms": 0.31, "error": null}
+{"timestamp": "2026-11-17T05:09:23.940+00:00", "request_id": "34382cc1d667434a8fce7af2e6df924a", "endpoint": "submit", "status_code": 200, "input_chars": 189, "input_preview": "Capstone c1 trial 1 request 04. ugh the 42 didnt show up again so im gonna be li", "label": "human", "final_score": 0.2141, "model_score": 0.1171, "style_score": 0.4404, "duration_ms": 169.06, "model_ms": 166.09, "style_ms": 0.39, "error": null}
+{"timestamp": "2026-11-17T05:09:24.130+00:00", "request_id": "357b3b4d453044bfb784d1874d3a410d", "endpoint": "submit", "status_code": 200, "input_chars": 274, "input_preview": "Capstone c1 trial 1 request 05. Just got out of the dentist, my whole face is nu", "label": "human", "final_score": 0.2948, "model_score": 0.103, "style_score": 0.7423, "duration_ms": 187.97, "model_ms": 185.47, "style_ms": 0.48, "error": null}
+```
+
+Criterion 2, from `results/capstone/before/c2_trial1.txt`, produced by `capstone_trials.py::criterion2`. The log lines are written by `request_log.py::write`, called from `app.py::_write_request_log`.
+
+```
+setup: 10 normal submits from one creator_id, to use up its 10 a minute
+400 empty text: response 400, logged 400, error 'text is required and must be a non-empty string.'  OK
+400 non-object body: response 400, logged 400, error 'Request body must be a JSON object.'  OK
+429 first: response 429, logged 429, error 'rate_limited'  OK
+429 second: response 429, logged 429, error 'rate_limited'  OK
+500 fault injection: response 500, logged 500, error 'RuntimeError: fault injection: forced 500 for testing'  OK
+SCORE 5/5
+```
+
+```json
+{"timestamp": "2026-11-17T05:09:55.858+00:00", "request_id": "2e5353dd820643bfb48cc6c4d2d772da", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.12, "model_ms": null, "style_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:09:55.864+00:00", "request_id": "126740bb4f69418b990293d3234f33da", "endpoint": "submit", "status_code": 400, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.49, "model_ms": null, "style_ms": null, "error": "Request body must be a JSON object."}
+{"timestamp": "2026-11-17T05:09:55.889+00:00", "request_id": "75d6ac9c8eb14f85b6e99f08c2df3c26", "endpoint": "submit", "status_code": 429, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.81, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:09:55.906+00:00", "request_id": "df42357c6a3c425791a869a37a51cd40", "endpoint": "submit", "status_code": 429, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 3.19, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:09:55.919+00:00", "request_id": "9b48e9007aa14b64b749752de0029a5f", "endpoint": "submit", "status_code": 500, "input_chars": 55, "input_preview": "Testing the rate limit with a repeated submission body.", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 0.59, "model_ms": null, "style_ms": null, "error": "RuntimeError: fault injection: forced 500 for testing"}
+```
+
+Criterion 3, from `results/capstone/before/c3_trial1.txt`, produced by `capstone_trials.py::criterion3`. The numbers are `duration_ms` and `model_ms` from `logs/requests.jsonl`.
+
+```
+warm-up: duration_ms 5978.87 model_ms 5975.19
+   65 chars  duration_ms   129.24  model_ms   126.63  under 500  EV08 short
+  157 chars  duration_ms   135.32  model_ms   132.92  under 500  late bus message
+  367 chars  duration_ms   189.53  model_ms   187.08  under 500  casual_human
+  400 chars  duration_ms   173.29  model_ms   170.56  under 500  formal_human
+  437 chars  duration_ms   177.99  model_ms   175.44  under 500  AI stand-in
+  523 chars  duration_ms   216.76  model_ms   213.32  under 500  FP01
+  775 chars  duration_ms   245.77  model_ms   243.41  under 500  EV03
+ 1455 chars  duration_ms   420.92  model_ms   417.26  under 500  four stand-ins joined
+ 2605 chars  duration_ms   536.78  model_ms    532.0  NOT under 500  eight stand-ins joined
+ 4800 chars  duration_ms   546.06  model_ms   542.48  NOT under 500  all stand-ins, cut to 4800
+SCORE 8/10
+```
+
+Criterion 4, from `results/capstone/before/c4_trial1.txt`, produced by `capstone_trials.py::criterion4`. Each start has its startup line, written by `app.py::log_startup`, followed by the first `/submit`.
+
+```
+--- start 1
+first /submit: status 200, client 6.599 s, duration_ms 6572.52, model_ms 6569.58  NOT under 2000
+--- start 2
+first /submit: status 200, client 6.457 s, duration_ms 6454.47, model_ms 6451.17  NOT under 2000
+--- start 3
+first /submit: status 200, client 6.382 s, duration_ms 6379.75, model_ms 6377.07  NOT under 2000
+SCORE 0/3
+```
+
+```json
+{"timestamp": "2026-11-17T05:10:52.194+00:00", "request_id": "1cf3fe102726405693f958611aad7754", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:10:58.824+00:00", "request_id": "596c5c75713e4f749468f86485a41a24", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6572.52, "model_ms": 6569.58, "style_ms": 0.54, "error": null}
+{"timestamp": "2026-11-17T05:11:01.095+00:00", "request_id": "ac0c9ce9f66f4d2ba744f971c764c80c", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:07.594+00:00", "request_id": "6fdb223655594ed88e4e8b331d662558", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6454.47, "model_ms": 6451.17, "style_ms": 0.94, "error": null}
+{"timestamp": "2026-11-17T05:11:09.761+00:00", "request_id": "946eb41683a94c4a80d3ab6bfded7e7f", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:16.183+00:00", "request_id": "7714397e332049d8ae58677f3329686e", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6379.75, "model_ms": 6377.07, "style_ms": 0.65, "error": null}
+```
+
+Criterion 5, from `results/capstone/before/c5_trial1.txt`, produced by `capstone_trials.py::criterion5`. This is clone 1 of 3. The response is what the RUNNING.md `Invoke-RestMethod` command printed.
+
+```
+--- clone 1
+free disk before clone: 8.46 GB
+temp folder: C:\Users\husey\AppData\Local\Temp\pgc5_t1_1
+outside the doc: HF_HOME set to the temp folder so the model downloads fresh, pip cache left on
+RUNNING.md setup block, run as written:
+git clone https://github.com/HuseynTahirli/ai201-project4-provenance-guard-starter-v2026.git
+cd ai201-project4-provenance-guard-starter-v2026
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe detector.py
+setup exit 0, 85.5 s
+Successfully installed blinker-1.9.0 certifi-2026.10.23 charset_normalizer-3.5.2 click-8.5.0 colorama-0.4.6 deprecated-3.0.1 filelock-4.2.9 flask-3.1.3 flask-limiter-3.12 fsspec-2026.9.0 gunicorn-23.0.0 huggingface-hub-0.36.2 idna-3.20 itsdangerous-2.2.0 jinja2-3.1.6 limits-5.8.0 markdown-it-py-4.2.0 markupsafe-3.0.4 mdurl-0.1.2 mpmath-1.3.0 networkx-3.7 numpy-2.5.4 ordered-set-4.1.0 packaging-26.3 pygments-2.21.0 pyyaml-6.0.3 regex-2026.9.29 requests-2.34.2 rich-13.9.4 safetensors-0.8.0 setuptools-84.2.1 sympy-1.14.0 tokenizers-0.22.2 torch-2.15.0 tqdm-4.70.1 transformers-4.57.6 typing-extensions-4.16.0 urllib3-2.8.0 werkzeug-3.1.9 wrapt-2.5.2
+perplexity     12.5
+model_signal   0.8864   (higher = more likely AI)
+start block, run as written: .\.venv\Scripts\python.exe app.py
+request block, run as written (Invoke-RestMethod)
+exit 0, 6.6 s, response: {"confidence":0.8754,"content_id":"668c948f-41cd-4d2d-b62d-b1236c9ddab4","guess":"ai","label":"Our checks found strong signs that this was written with an AI tool. These checks are not perfect. If you wrote it yourself, you can appeal and a person will take a look.","model_score":0.822,"style_score":1.0}
+temp folder removed: True
+clone 1: 200 from /submit
+SCORE 3/3
+```

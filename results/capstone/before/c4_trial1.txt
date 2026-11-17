@@ -1,0 +1,42 @@
+# Criterion 4, trial 1
+# started 2026-11-16T23:10:50
+
+=== criterion 4, trial 1
+--- start 1
+server started, pid 29044
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:10:52] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:10:58] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.599 s, duration_ms 6572.52, model_ms 6569.58  NOT under 2000
+{"timestamp": "2026-11-17T05:10:52.194+00:00", "request_id": "1cf3fe102726405693f958611aad7754", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:10:58.824+00:00", "request_id": "596c5c75713e4f749468f86485a41a24", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6572.52, "model_ms": 6569.58, "style_ms": 0.54, "error": null}
+--- start 2
+server started, pid 30448
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:11:01] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:11:07] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.457 s, duration_ms 6454.47, model_ms 6451.17  NOT under 2000
+{"timestamp": "2026-11-17T05:11:01.095+00:00", "request_id": "ac0c9ce9f66f4d2ba744f971c764c80c", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:07.594+00:00", "request_id": "6fdb223655594ed88e4e8b331d662558", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6454.47, "model_ms": 6451.17, "style_ms": 0.94, "error": null}
+--- start 3
+server started, pid 11116
+server stopped. last console lines:
+   * Restarting with stat
+   * Debugger is active!
+   * Debugger PIN: 121-401-905
+  127.0.0.1 - - [16/Nov/2026 23:11:09] "POST /ping HTTP/1.1" 200 -
+  `loss_type=None` was set in the config but it is unrecognized. Using the default loss: `ForCausalLMLoss`.
+  127.0.0.1 - - [16/Nov/2026 23:11:16] "POST /submit HTTP/1.1" 200 -
+first /submit: status 200, client 6.382 s, duration_ms 6379.75, model_ms 6377.07  NOT under 2000
+{"timestamp": "2026-11-17T05:11:09.761+00:00", "request_id": "946eb41683a94c4a80d3ab6bfded7e7f", "endpoint": "startup", "status_code": null, "input_chars": null, "input_preview": null, "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": null, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:11:16.183+00:00", "request_id": "7714397e332049d8ae58677f3329686e", "endpoint": "submit", "status_code": 200, "input_chars": 437, "input_preview": "Reading is one of the most effective ways to expand knowledge and improve critic", "label": "unsure", "final_score": 0.7149, "model_score": 0.7248, "style_score": 0.6918, "duration_ms": 6379.75, "model_ms": 6377.07, "style_ms": 0.65, "error": null}
+
+SCORE 0/3

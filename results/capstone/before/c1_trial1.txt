@@ -1,0 +1,59 @@
+# Criterion 1, trial 1
+# started 2026-11-16T23:09:16
+
+=== criterion 1, trial 1
+server started, pid 29232
+server stopped. last console lines:
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 400 -
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 429 -
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 429 -
+  127.0.0.1 - - [16/Nov/2026 23:09:25] "POST /submit HTTP/1.1" 429 -
+sent 20 requests, log gained 20 request lines
+statuses sent: 200 200 200 200 200 200 200 200 200 200 200 200 200 200 400 400 400 429 429 429
+ 1 submit 200 MATCH  request_id 6a29675e63a4499496f6d93d2633dcea
+ 2 submit 200 MATCH  request_id 2ad1ae79cbfc4aa2ac59fbbd81957e58
+ 3 submit 200 MATCH  request_id be2590e552a647588896f5b3c8bef18c
+ 4 submit 200 MATCH  request_id 34382cc1d667434a8fce7af2e6df924a
+ 5 submit 200 MATCH  request_id 357b3b4d453044bfb784d1874d3a410d
+ 6 submit 200 MATCH  request_id 989cf9c5cf7e4e19a05b5f2ad52afeee
+ 7 submit 200 MATCH  request_id 4413beb45db54841881f47e8e2275e9b
+ 8 submit 200 MATCH  request_id 5a0b887659bd44d29c46edb9fdddb096
+ 9 submit 200 MATCH  request_id d112a68a8f474b11920bcf2ed33859ce
+10 submit 200 MATCH  request_id e9b73050d42243c0906e779951fcef51
+11 submit 200 MATCH  request_id f51811dca50a4492b474217cda377082
+12 submit 200 MATCH  request_id 936703c7b535483d8f177e66b2f8f77b
+13 appeal 200 MATCH  request_id c6218853f6dc4ca2bb64569d1c861ed4
+14 appeal 200 MATCH  request_id 4cc95b4e2ed747968ec6939300138957
+15 submit 400 MATCH  request_id 134afcdac14742a68b763ca078fed34d
+16 submit 400 MATCH  request_id e44ef76a640b4bb1b817ee35a7b5489d
+17 submit 400 MATCH  request_id dd15196423154a71ab865f363e8db84a
+18 submit 429 MATCH  request_id 6fdfec61d3f24733a6eca84a0782e5cb
+19 submit 429 MATCH  request_id d3ccde8202f74c3b812e97b01d4bd0e4
+20 submit 429 MATCH  request_id 64c1552918dd46b6a2236fea95edb2d3
+unique request_ids in the new lines: 20
+
+log lines:
+{"timestamp": "2026-11-17T05:09:23.360+00:00", "request_id": "6a29675e63a4499496f6d93d2633dcea", "endpoint": "submit", "status_code": 200, "input_chars": 453, "input_preview": "Capstone c1 trial 1 request 01. I am applying for the weekend shift supervisor p", "label": "unsure", "final_score": 0.3672, "model_score": 0.271, "style_score": 0.5917, "duration_ms": 5973.72, "model_ms": 5971.07, "style_ms": 0.76, "error": null}
+{"timestamp": "2026-11-17T05:09:23.580+00:00", "request_id": "2ad1ae79cbfc4aa2ac59fbbd81957e58", "endpoint": "submit", "status_code": 200, "input_chars": 470, "input_preview": "Capstone c1 trial 1 request 02. The survey was sent to 212 households on the eas", "label": "unsure", "final_score": 0.4783, "model_score": 0.412, "style_score": 0.6331, "duration_ms": 204.24, "model_ms": 201.42, "style_ms": 0.62, "error": null}
+{"timestamp": "2026-11-17T05:09:23.767+00:00", "request_id": "be2590e552a647588896f5b3c8bef18c", "endpoint": "submit", "status_code": 200, "input_chars": 252, "input_preview": "Capstone c1 trial 1 request 03. hey are you still coming saturday? mum wants to ", "label": "human", "final_score": 0.2306, "model_score": 0.1043, "style_score": 0.5254, "duration_ms": 170.96, "model_ms": 166.68, "style_ms": 0.31, "error": null}
+{"timestamp": "2026-11-17T05:09:23.940+00:00", "request_id": "34382cc1d667434a8fce7af2e6df924a", "endpoint": "submit", "status_code": 200, "input_chars": 189, "input_preview": "Capstone c1 trial 1 request 04. ugh the 42 didnt show up again so im gonna be li", "label": "human", "final_score": 0.2141, "model_score": 0.1171, "style_score": 0.4404, "duration_ms": 169.06, "model_ms": 166.09, "style_ms": 0.39, "error": null}
+{"timestamp": "2026-11-17T05:09:24.130+00:00", "request_id": "357b3b4d453044bfb784d1874d3a410d", "endpoint": "submit", "status_code": 200, "input_chars": 274, "input_preview": "Capstone c1 trial 1 request 05. Just got out of the dentist, my whole face is nu", "label": "human", "final_score": 0.2948, "model_score": 0.103, "style_score": 0.7423, "duration_ms": 187.97, "model_ms": 185.47, "style_ms": 0.48, "error": null}
+{"timestamp": "2026-11-17T05:09:24.345+00:00", "request_id": "989cf9c5cf7e4e19a05b5f2ad52afeee", "endpoint": "submit", "status_code": 200, "input_chars": 395, "input_preview": "Capstone c1 trial 1 request 06. Has anyone else had the dishwasher error E24 on ", "label": "unsure", "final_score": 0.356, "model_score": 0.1707, "style_score": 0.7884, "duration_ms": 211.27, "model_ms": 208.85, "style_ms": 0.39, "error": null}
+{"timestamp": "2026-11-17T05:09:24.540+00:00", "request_id": "4413beb45db54841881f47e8e2275e9b", "endpoint": "submit", "status_code": 200, "input_chars": 359, "input_preview": "Capstone c1 trial 1 request 07. Finally beat the second boss after about thirty ", "label": "human", "final_score": 0.2665, "model_score": 0.1321, "style_score": 0.5801, "duration_ms": 191.12, "model_ms": 188.52, "style_ms": 0.6, "error": null}
+{"timestamp": "2026-11-17T05:09:24.727+00:00", "request_id": "5a0b887659bd44d29c46edb9fdddb096", "endpoint": "submit", "status_code": 200, "input_chars": 310, "input_preview": "Capstone c1 trial 1 request 08. I agree with Priya about the ending but I read t", "label": "unsure", "final_score": 0.4266, "model_score": 0.2965, "style_score": 0.7303, "duration_ms": 183.14, "model_ms": 179.87, "style_ms": 0.66, "error": null}
+{"timestamp": "2026-11-17T05:09:24.928+00:00", "request_id": "d112a68a8f474b11920bcf2ed33859ce", "endpoint": "submit", "status_code": 200, "input_chars": 389, "input_preview": "Capstone c1 trial 1 request 09. Good point about the sample size in that study, ", "label": "unsure", "final_score": 0.4667, "model_score": 0.3472, "style_score": 0.7455, "duration_ms": 196.94, "model_ms": 193.83, "style_ms": 0.73, "error": null}
+{"timestamp": "2026-11-17T05:09:25.142+00:00", "request_id": "e9b73050d42243c0906e779951fcef51", "endpoint": "submit", "status_code": 200, "input_chars": 469, "input_preview": "Capstone c1 trial 1 request 10. Regular exercise offers a wide range of benefits", "label": "unsure", "final_score": 0.7059, "model_score": 0.6912, "style_score": 0.7402, "duration_ms": 200.78, "model_ms": 197.92, "style_ms": 0.46, "error": null}
+{"timestamp": "2026-11-17T05:09:25.351+00:00", "request_id": "f51811dca50a4492b474217cda377082", "endpoint": "submit", "status_code": 200, "input_chars": 469, "input_preview": "Capstone c1 trial 1 request 11. Reading is one of the most effective ways to exp", "label": "unsure", "final_score": 0.5681, "model_score": 0.5024, "style_score": 0.7213, "duration_ms": 186.91, "model_ms": 183.29, "style_ms": 0.56, "error": null}
+{"timestamp": "2026-11-17T05:09:25.562+00:00", "request_id": "936703c7b535483d8f177e66b2f8f77b", "endpoint": "submit", "status_code": 200, "input_chars": 484, "input_preview": "Capstone c1 trial 1 request 12. Effective time management is an essential skill ", "label": "unsure", "final_score": 0.5439, "model_score": 0.4323, "style_score": 0.8043, "duration_ms": 194.92, "model_ms": 191.8, "style_ms": 0.63, "error": null}
+{"timestamp": "2026-11-17T05:09:25.596+00:00", "request_id": "c6218853f6dc4ca2bb64569d1c861ed4", "endpoint": "appeal", "status_code": 200, "input_chars": 58, "input_preview": "c1 trial 1 appeal for 2a8e2c0a-e826-4e73-baf5-101c270a7bca", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 6.82, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:09:25.628+00:00", "request_id": "4cc95b4e2ed747968ec6939300138957", "endpoint": "appeal", "status_code": 200, "input_chars": 58, "input_preview": "c1 trial 1 appeal for fccee6db-9039-4731-a6be-cf715f93d1e2", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 7.64, "model_ms": null, "style_ms": null, "error": null}
+{"timestamp": "2026-11-17T05:09:25.655+00:00", "request_id": "134afcdac14742a68b763ca078fed34d", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.35, "model_ms": null, "style_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:09:25.660+00:00", "request_id": "e44ef76a640b4bb1b817ee35a7b5489d", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.17, "model_ms": null, "style_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:09:25.665+00:00", "request_id": "dd15196423154a71ab865f363e8db84a", "endpoint": "submit", "status_code": 400, "input_chars": 0, "input_preview": "", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.56, "model_ms": null, "style_ms": null, "error": "text is required and must be a non-empty string."}
+{"timestamp": "2026-11-17T05:09:25.687+00:00", "request_id": "6fdfec61d3f24733a6eca84a0782e5cb", "endpoint": "submit", "status_code": 429, "input_chars": 474, "input_preview": "Capstone c1 trial 1 request 13. Sustainable living plays an important role in pr", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.52, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:09:25.703+00:00", "request_id": "d3ccde8202f74c3b812e97b01d4bd0e4", "endpoint": "submit", "status_code": 429, "input_chars": 471, "input_preview": "Capstone c1 trial 1 request 14. Online learning has transformed the way that stu", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 1.86, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+{"timestamp": "2026-11-17T05:09:25.718+00:00", "request_id": "64c1552918dd46b6a2236fea95edb2d3", "endpoint": "submit", "status_code": 429, "input_chars": 335, "input_preview": "Capstone c1 trial 1 request 15. Working from a coffee shop has a lot of benefits", "label": null, "final_score": null, "model_score": null, "style_score": null, "duration_ms": 2.64, "model_ms": null, "style_ms": null, "error": "rate_limited"}
+
+SCORE 20/20
