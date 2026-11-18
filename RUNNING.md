@@ -1,5 +1,11 @@
 # Running Provenance Guard
 
+> **Before you start**
+> - No API key needed. Everything runs on your machine.
+> - Setup takes about 2 minutes, plus a one-time 525 MB GPT-2 download.
+> - You need Python 3.12 (3.11 and 3.13 also work, 3.14 doesn't) and about 3 GB of free disk.
+> - On Mac or Linux, see [Mac and Linux](#mac-and-linux).
+
 This is Path B: the service runs locally on your own machine, and every request is logged to a file. It isn't hosted online. The reason is in [Why it runs locally](#why-it-runs-locally).
 
 Every command below is for Windows PowerShell, run from the repo folder. They call the virtual environment's Python directly, so you don't need to activate it.
@@ -114,6 +120,27 @@ To check the service is up without running the model, send `POST /ping` or `GET 
 | `GET /log` | The audit log, as JSON |
 | `GET /health` | Whether the service is up and the model is loaded |
 | `POST /ping` | An echo, to check the service answers |
+
+---
+
+## Mac and Linux
+
+The same steps in a bash or zsh terminal, from the repo folder. I've only tested on Windows, so treat these as untested.
+
+```bash
+python3.12 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+python app.py
+```
+
+Then in a second terminal, send the sample request:
+
+```bash
+curl -X POST http://127.0.0.1:5000/submit -H "Content-Type: application/json" -d '{"text": "Remote work offers a wide range of benefits for both employees and organizations. It provides greater flexibility by allowing individuals to manage their schedules more effectively.", "creator_id": "me"}'
+```
+
+To read the last line of the request log: `tail -n 1 logs/requests.jsonl`.
 
 ---
 
